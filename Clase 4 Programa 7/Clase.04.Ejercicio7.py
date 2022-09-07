@@ -17,7 +17,7 @@ def lista_de_nombres_genero(genero_elegido):
         if datos_personaje["genero"] == genero_elegido:
             mensaje += "{0}\n".format(datos_personaje["nombre"])
 
-    print (mensaje)
+    return mensaje
             
 
 #  Altura maxima del genero elegido (Punto C y D)
@@ -31,7 +31,7 @@ def calculo_altura_max_genero(genero_elegido):
 
     mensaje = "{0:.2f} metros".format(altura_maxima)
 
-    print (mensaje)
+    return mensaje
 
 
 # Altura minima del genero elegido (Punto E y F)
@@ -45,7 +45,7 @@ def calculo_altura_min_genero(genero_elegido):
 
     mensaje = "{0:.2f} metros".format(altura_minima)
 
-    print (mensaje)
+    return mensaje
 
 # Promedio de altura del genero elegido (Punto G y H)
 def promedio_altura_genero (genero_elegido):
@@ -59,7 +59,7 @@ def promedio_altura_genero (genero_elegido):
     promedio_altura = acumulador_altura / contador_personajes
     mensaje = "{0:.2f} metros".format(promedio_altura)
 
-    print (mensaje)
+    return mensaje
 
 
 # Datos de los personajes mas altos y mas bajos de cada genero (I)
@@ -95,7 +95,7 @@ def datos_personajes_altura_max_min():
     mensaje += "\nEl personaje femenino mas alto es {0}".format(femenino_mas_alto["nombre"])
     mensaje += "\nEl personaje femenino mas bajo es {0}".format(femenino_mas_bajo["nombre"])
     
-    print (mensaje)
+    return mensaje
 
 # Cantidad de personajes con los distintos tipos del dato elegido (J, K y L)
 def cant_personajes_por_tipo_de(dato):
@@ -114,7 +114,7 @@ def cant_personajes_por_tipo_de(dato):
         cantidad = contadores_dato[tipo]
         mensaje += "Tipo '{0}': {1}\n".format(tipo, cantidad)
 
-    print (mensaje)
+    return mensaje
 
 # Lista de los personajes ordenados por los tipos del dato elegido (M, N y O)
 def personajes_ordenados_por_tipo_de(dato):
@@ -143,7 +143,7 @@ def personajes_ordenados_por_tipo_de(dato):
         for personaje in personajes:
             mensaje += personaje + "\n"
         
-    print (mensaje)
+    return mensaje
 
         
 while True:
@@ -169,63 +169,63 @@ while True:
                     )
     if opcion == "A":
         print("Lista de personajes masculinos: ")
-        lista_de_nombres_genero("M")
+        print(lista_de_nombres_genero("M"))
 
     elif opcion == "B":
         print("Lista de personajes femeninos: ")
-        lista_de_nombres_genero("F")
+        print(lista_de_nombres_genero("F"))
 
     elif opcion == "C":
         print("Altura maxima de personajes masculinos: ")
-        calculo_altura_max_genero("M")
+        print(calculo_altura_max_genero("M"))
 
     elif opcion == "D":
         print("Altura maxima de personajes femeninos: ")
-        calculo_altura_max_genero("F")
+        print(calculo_altura_max_genero("F"))
 
     elif opcion == "E":
         print("Altura minima de personajes masculinos: ")
-        calculo_altura_min_genero("M")
+        print(calculo_altura_min_genero("M"))
 
     elif opcion == "F":
         print("Altura minima de personajes femeninos: ")
-        calculo_altura_min_genero("F")
+        print(calculo_altura_min_genero("F"))
 
     elif opcion == "G":
         print("Promedio altura personajes masculinos: ")
-        promedio_altura_genero("M")
+        print(promedio_altura_genero("M"))
 
     elif opcion == "H":
         print("Promedio altura personajes femeninos: ")
-        promedio_altura_genero("F")
+        print(promedio_altura_genero("F"))
 
     elif opcion == "I":
         print("Datos de los personajes con mayor y menor altura de cada genero: ")
-        datos_personajes_altura_max_min()
+        print(datos_personajes_altura_max_min())
 
     elif opcion == "J":
         print("Cantidad de personajes por tipo de color de ojo")
-        cant_personajes_por_tipo_de("color_ojos")
+        print(cant_personajes_por_tipo_de("color_ojos"))
 
     elif opcion == "K":
         print("Cantidad de personajes por tipo de color de pelo")
-        cant_personajes_por_tipo_de("color_pelo")
+        print(cant_personajes_por_tipo_de("color_pelo"))
 
     elif opcion == "L":
         print("Cantidad de personajes por tipo inteligencia")
-        cant_personajes_por_tipo_de("inteligencia")
+        print(cant_personajes_por_tipo_de("inteligencia"))
 
     elif opcion == "M":
         print("Lista de personajes ordenados por color de ojos")
-        personajes_ordenados_por_tipo_de("color_ojos")
+        print(personajes_ordenados_por_tipo_de("color_ojos"))
 
     elif opcion == "N":
         print("Lista de personajes ordenados por color de pelo")
-        personajes_ordenados_por_tipo_de("color_pelo")
+        print(personajes_ordenados_por_tipo_de("color_pelo"))
 
     elif opcion == "O":
         print("Lista de personajes ordenados por inteligencia")
-        personajes_ordenados_por_tipo_de("inteligencia")
+        print(personajes_ordenados_por_tipo_de("inteligencia"))
 
     elif opcion == "S":
         print("ADIOS!")
