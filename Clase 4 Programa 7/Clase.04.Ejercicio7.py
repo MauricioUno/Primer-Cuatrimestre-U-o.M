@@ -25,13 +25,11 @@ def calculo_altura_max_genero(genero_elegido):
     flag_primer_personaje = True
     for datos_personaje in lista_personajes:
         if datos_personaje["genero"] == genero_elegido:
-            if flag_primer_personaje or datos_personaje["altura"] > altura_maxima:
-                altura_maxima = datos_personaje["altura"]
+            if flag_primer_personaje or datos_personaje["altura"] > altura_maxima["altura"]:
+                altura_maxima = datos_personaje
                 flag_primer_personaje = False
-
-    mensaje = "{0:.2f} metros".format(altura_maxima)
-
-    return mensaje
+    
+    return altura_maxima
 
 
 # Altura minima del genero elegido (Punto E y F)
@@ -39,13 +37,11 @@ def calculo_altura_min_genero(genero_elegido):
     flag_primer_personaje = True
     for datos_personaje in lista_personajes:
         if datos_personaje["genero"] == genero_elegido:
-            if flag_primer_personaje or datos_personaje["altura"] < altura_minima:
-                altura_minima = datos_personaje["altura"]
+            if flag_primer_personaje or datos_personaje["altura"] < altura_minima["altura"]:
+                altura_minima = datos_personaje
                 flag_primer_personaje = False
 
-    mensaje = "{0:.2f} metros".format(altura_minima)
-
-    return mensaje
+    return altura_minima
 
 # Promedio de altura del genero elegido (Punto G y H)
 def promedio_altura_genero (genero_elegido):
@@ -57,38 +53,16 @@ def promedio_altura_genero (genero_elegido):
             contador_personajes += 1
         
     promedio_altura = acumulador_altura / contador_personajes
-    mensaje = "{0:.2f} metros".format(promedio_altura)
-
-    return mensaje
+    return promedio_altura
 
 
 # Datos de los personajes mas altos y mas bajos de cada genero (I)
 def datos_personajes_altura_max_min():
-    flag_primer_masculino = True
-    flag_primer_femenino = True
-    for datos_personaje in lista_personajes:
-
-        if datos_personaje["genero"] == "M":
-            if flag_primer_masculino:
-                masculino_mas_alto = datos_personaje
-                masculino_mas_bajo = datos_personaje
-                flag_primer_masculino = False
-            else:
-                if(datos_personaje["altura"] > masculino_mas_alto["altura"]):
-                    masculino_mas_alto = datos_personaje
-                elif(datos_personaje["altura"] < masculino_mas_bajo["altura"]):
-                    masculino_mas_bajo = datos_personaje
-
-        elif datos_personaje["genero"] == "F":
-            if flag_primer_femenino:
-                femenino_mas_alto = datos_personaje
-                femenino_mas_bajo = datos_personaje
-                flag_primer_femenino = False
-            else:
-                if(datos_personaje["altura"] > femenino_mas_alto["altura"]):
-                    femenino_mas_alto = datos_personaje
-                elif(datos_personaje["altura"] < femenino_mas_bajo["altura"]):
-                    femenino_mas_bajo = datos_personaje
+    
+    masculino_mas_alto = calculo_altura_max_genero("M")
+    masculino_mas_bajo = calculo_altura_min_genero("M")
+    femenino_mas_alto = calculo_altura_max_genero("F")
+    femenino_mas_bajo = calculo_altura_min_genero("F")
 
     mensaje = "El personaje masculino mas alto es {0}".format(masculino_mas_alto["nombre"])
     mensaje += "\nEl personaje masculino mas bajo es {0}".format(masculino_mas_bajo["nombre"])
@@ -103,7 +77,7 @@ def cant_personajes_por_tipo_de(dato):
     for datos_personaje in lista_personajes:
         datos_personaje[dato] = datos_personaje[dato].lower()
         if datos_personaje[dato] == "":
-            datos_personaje[dato] = "No definido"
+            datos_personaje[dato] = "undefined"
         contadores_dato [datos_personaje[dato]] = 0
     
     for datos_personaje in lista_personajes:
@@ -123,7 +97,7 @@ def personajes_ordenados_por_tipo_de(dato):
     for datos_personaje in lista_personajes:
         datos_personaje[dato] = datos_personaje[dato].lower()
         if datos_personaje[dato] == "":
-            datos_personaje[dato] = "No definido"
+            datos_personaje[dato] = "undefined"
         diccionario_tipos_de_dato[datos_personaje[dato]] = 0
 
 
@@ -168,68 +142,58 @@ while True:
                     "Ingrese su opcion: "
                     )
     if opcion == "A":
-        print("Lista de personajes masculinos: ")
-        print(lista_de_nombres_genero("M"))
-
+        print("Lista de personajes masculinos: \n{0}".format(lista_de_nombres_genero("M")))
+        
     elif opcion == "B":
-        print("Lista de personajes femeninos: ")
-        print(lista_de_nombres_genero("F"))
+        print("Lista de personajes femeninos: \n{0}".format(lista_de_nombres_genero("F")))
 
     elif opcion == "C":
-        print("Altura maxima de personajes masculinos: ")
-        print(calculo_altura_max_genero("M"))
+        altura_max = calculo_altura_max_genero("M")
+        print("Altura maxima de personajes masculinos: \n{0:.2f} metros ".format(altura_max["altura"]))
 
     elif opcion == "D":
-        print("Altura maxima de personajes femeninos: ")
-        print(calculo_altura_max_genero("F"))
+        altura_max = calculo_altura_max_genero("F")
+        print("Altura maxima de personajes femeninos: \n{0:.2f} metros ".format(altura_max["altura"]))
 
     elif opcion == "E":
-        print("Altura minima de personajes masculinos: ")
-        print(calculo_altura_min_genero("M"))
-
+        altura_min = calculo_altura_min_genero("M")
+        print("Altura minima de personajes masculinos: \n{0:.2f} metros ".format(altura_min["altura"]))
+        
     elif opcion == "F":
-        print("Altura minima de personajes femeninos: ")
-        print(calculo_altura_min_genero("F"))
+        altura_min = calculo_altura_min_genero("F")
+        print("Altura minima de personajes femeninos: \n{0:.2f} metros ".format(altura_min["altura"]))
 
     elif opcion == "G":
-        print("Promedio altura personajes masculinos: ")
-        print(promedio_altura_genero("M"))
+        print("Promedio altura personajes masculinos: \n{0:.2f} metros ".format(promedio_altura_genero("M")))
 
     elif opcion == "H":
-        print("Promedio altura personajes femeninos: ")
-        print(promedio_altura_genero("F"))
+        print("Promedio altura personajes femeninos: \n{0:.2f} metros ".format(promedio_altura_genero("F")))
 
     elif opcion == "I":
-        print("Datos de los personajes con mayor y menor altura de cada genero: ")
-        print(datos_personajes_altura_max_min())
+        print("Datos de los personajes con mayor y menor altura de cada genero: \n{0}".format(datos_personajes_altura_max_min()))
 
     elif opcion == "J":
-        print("Cantidad de personajes por tipo de color de ojo")
-        print(cant_personajes_por_tipo_de("color_ojos"))
+        print("Cantidad de personajes por tipo de color de ojo \n{0}".format(cant_personajes_por_tipo_de("color_ojos")))
 
     elif opcion == "K":
-        print("Cantidad de personajes por tipo de color de pelo")
-        print(cant_personajes_por_tipo_de("color_pelo"))
+        print("Cantidad de personajes por tipo de color de pelo \n{0}".format(cant_personajes_por_tipo_de("color_pelo")))
 
     elif opcion == "L":
-        print("Cantidad de personajes por tipo inteligencia")
-        print(cant_personajes_por_tipo_de("inteligencia"))
+        print("Cantidad de personajes por tipo inteligencia \n{0}".format(cant_personajes_por_tipo_de("inteligencia")))
 
     elif opcion == "M":
-        print("Lista de personajes ordenados por color de ojos")
-        print(personajes_ordenados_por_tipo_de("color_ojos"))
+        print("Lista de personajes ordenados por color de ojos \n{0}".format(personajes_ordenados_por_tipo_de("color_ojos")))
 
     elif opcion == "N":
-        print("Lista de personajes ordenados por color de pelo")
-        print(personajes_ordenados_por_tipo_de("color_pelo"))
+        print("Lista de personajes ordenados por color de pelo \n{0}".format(personajes_ordenados_por_tipo_de("color_pelo")))
 
     elif opcion == "O":
-        print("Lista de personajes ordenados por inteligencia")
-        print(personajes_ordenados_por_tipo_de("inteligencia"))
+        print("Lista de personajes ordenados por inteligencia \n{0}".format(personajes_ordenados_por_tipo_de("inteligencia")))
 
     elif opcion == "S":
         print("ADIOS!")
         break
+
     else:
         print("INGRESE UNA OPCION VALIDA!")
 
