@@ -98,17 +98,13 @@ def personajes_ordenados_por_tipo_de(dato):
         datos_personaje[dato] = datos_personaje[dato].lower()
         if datos_personaje[dato] == "":
             datos_personaje[dato] = "undefined"
-        diccionario_tipos_de_dato[datos_personaje[dato]] = 0
+        diccionario_tipos_de_dato[datos_personaje[dato]] = []
 
 
     for tipo_de_dato in diccionario_tipos_de_dato:
-        
-        personajes_tipo_de_dato = []
         for datos_personaje in lista_personajes:
             if datos_personaje[dato] == tipo_de_dato:
-                personajes_tipo_de_dato.append(datos_personaje["nombre"])
-
-        diccionario_tipos_de_dato[tipo_de_dato] = personajes_tipo_de_dato
+                diccionario_tipos_de_dato[tipo_de_dato].append(datos_personaje["nombre"])
     
     mensaje = ""
     for tipo_de_dato in diccionario_tipos_de_dato:

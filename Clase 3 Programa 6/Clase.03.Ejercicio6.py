@@ -6,7 +6,7 @@ from data_stark import lista_personajes
 for datos_personaje in lista_personajes:
     datos_personaje["altura"] = float(datos_personaje["altura"]) / 100
     datos_personaje["peso"] = float (datos_personaje["peso"])
-    datos_personaje["fuerza"] = int (datos_personaje["peso"])
+    datos_personaje["fuerza"] = int (datos_personaje["fuerza"])
 
 # Lista de nombres (B)
 def lista_nombre_personajes():
