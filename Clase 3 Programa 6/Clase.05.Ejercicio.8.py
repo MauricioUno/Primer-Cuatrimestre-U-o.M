@@ -2,26 +2,28 @@
 
 from data_stark import lista_personajes
 
-def casteo_de_datos(diccionario_datos, clave, tipo_a_castear):
-    if type(diccionario_datos[clave]) == str:
-                diccionario_datos[clave] = tipo_a_castear(diccionario_datos[clave])
-                return True
 
-def stark_normalizar_datos(lista):
+def stark_normalizar_datos(lista: list, clave: str, tipo_de_casteo: type): 
 
-    if len(lista) > 0:
-        datos_modificados = False
-        for diccionario in lista:
-            datos_modificados = casteo_de_datos(diccionario, "altura", float)
-            datos_modificados = casteo_de_datos(diccionario, "peso", float)
-            datos_modificados = casteo_de_datos(diccionario, "fuerza", int)
-        if datos_modificados:
-            print("Se modificaron datos!")
+
+    if type (lista) == type ([]) and len(lista) > 0 and type(clave) == type("") and type(tipo_de_casteo) == type(type):
+        datos_normalizados = 0
+        for personaje in lista:
+            if type(personaje[clave]) == type(""):
+                personaje[clave] = tipo_de_casteo(personaje[clave])
+                datos_normalizados += 1
+
+        if datos_normalizados > 0:
+            print("Cantidad de datos '{0}' normalizados : {1}".format(clave, datos_normalizados))
         else:
-            print("No se modificaron datos")
+            print("Ningun dato '{0}' fue normalizado".format(clave))
+
+
     else:
-        print ("LA LISTA ESTA VACIA!")
+        print ("ESTO NO ES UNA LISTA!")
                 
 
-
-stark_normalizar_datos(lista_personajes)
+stark_normalizar_datos(lista_personajes, "altura", float)
+stark_normalizar_datos(lista_personajes, "peso", float)
+stark_normalizar_datos(lista_personajes, "fuerza", int)
+#print(lista_personajes)
