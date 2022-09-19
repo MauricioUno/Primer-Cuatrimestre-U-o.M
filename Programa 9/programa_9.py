@@ -305,14 +305,16 @@ def sanitizar_string(texto_str: str, valor_default = "-") -> str:
         reg_ex_palabras = "^[a-z A-Z]+$"
         if re.findall(reg_ex_palabras, texto_str) != []:
             texto_str = texto_str.lower()
-            return texto_str
+            texto_sanitizado = texto_str # String representa palabras
         else:
-            return "N/A"
+            texto_sanitizado = "N/A" # String tiene un caracter que no es una letra
 
     elif valor_default != "-":
             if re.findall("^ | $", texto_str) != []:
                 texto_str = texto_str.strip()
-            return valor_default.lower()
+            texto_sanitizado = valor_default.lower() # El primer string esta vacio y se usa el string opcional
+    
+    return texto_sanitizado
 
 # Punto 3.4
 def sanitizar_dato(personaje: dict, clave: str, tipo_dato: str) -> bool:
@@ -397,5 +399,60 @@ def stark_normalizar_datos(personajes: list):
         print("Datos normalizados")
     else:
         print("Error! No es una lista")
+
+
+# Punto 4.1
+def generar_indice_nombres(personajes: list) -> list:
+    '''
+    Parametros:
+    Una lista de diccionarios con los datos de los personajes
+
+    La funcion almacenara cada palabra de todos los nombres en una 
+    nueva lista, para hacer esto validara si el parametro pasado es una
+    lista con algun elemento y tambien si suss elementos son un diccionario 
+    con la clave 'nombre'
+
+    Retorna:
+    La lista de palabras
+    Nada en caso de error
+    '''
+    retornar_lista = True
+    lista_palabras = []
+    if type(personajes) == type([]) and len(personajes) > 0:
+        for personaje in personajes:
+            if type (personaje) == type({}) and personaje.get("nombre") != None:
+                palabras_nombre = re.findall("[a-zA-Z]+",personaje["nombre"])
+                for palabra in palabras_nombre:
+                    lista_palabras.append(palabra)
+            else:
+                retornar_lista = False
+                break
+    else:
+        retornar_lista = False
+
+    if retornar_lista:
+        return lista_palabras
+    else:
+        print("El origen de datos no contiene el formato correcto")       
+    
+
+
+# Punto 4.2
+def stark_imprimir_indice_nombre(personajes: list):
+    '''
+    Parametros:
+    Una lista de diccionarios con los datos de los personajes
+
+    Imprimira un mensaje con todas las palabras de los nombres
+    separadas por un guion (-)
+    '''
+    lista_palabras = generar_indice_nombres(personajes)
+    if lista_palabras != None:
+        mensaje_palabras_nombres = "-".join(lista_palabras)
+        print(mensaje_palabras_nombres)
+
+
+stark_imprimir_indice_nombre(lista_personajes)
+# Punto 5.1
 
 
