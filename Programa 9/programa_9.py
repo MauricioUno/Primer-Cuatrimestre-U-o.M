@@ -109,7 +109,7 @@ def stark_imprimir_nombres_con_iniciales(personajes: list):
                 print(mensaje_nombre_iniciales)
         
     else:
-        print("NO ME PASASTE UNA LISTA!")
+        print("Error, no es una lista")
 
 
 
@@ -127,7 +127,7 @@ def generar_codigo_personaje(id: int, genero: str) -> str:
     El string creado
     "N/A" si no tiene genero o id
     '''
-    if type(id) == int and len(re.findall("M|F|NB", genero)) == 1:
+    if type(id) == int and re.findall("^(M|F|NB){1}$", genero) != []:
         mensaje_genero = "{0}-".format(genero)
         mensaje_id = "{0}".format(id).zfill(10 - len(mensaje_genero))
         mensaje_genero_e_id = mensaje_genero + mensaje_id
@@ -197,10 +197,12 @@ def stark_generar_codigos_personaje(personajes: list):
             print(mensaje_codigos)
         else:
             print("El origen de datos no contiene el formato correcto!")
+    else:
+        print("Error, no es una lista")
 
 
 # Punto 3.1
-def sanitizar_entero(numero_str: str)-> int:
+def sanitizar_entero(numero_str: str) -> int:
     '''
     Parametros:
     Un string que representa un posible numero entero
@@ -221,22 +223,179 @@ def sanitizar_entero(numero_str: str)-> int:
 
     if len (numero_str) > 0:
 
-        re_entero = "^-?[0-9]+$"
-        lista_numero = re.findall(re_entero, numero_str)
-        if len(lista_numero) == 1 and lista_numero[0] == numero_str:
-           
+        reg_ex_int = "^[+-]?[0-9]+$"
+        if re.findall(reg_ex_int, numero_str) != []:
             numero_str = int (numero_str)
             if numero_str > 0:
-                return numero_str # String representa un numero positivo
+                numero_sanitizado = numero_str # String representa un numero positivo
             else:
-                return -2 # String no representa un numero positivo
+                numero_sanitizado = -2 # String no representa un numero negativo o cero
 
         else:
-            return -1  # Caracter no numerico presente
+            numero_sanitizado = -1  # Caracter no numerico presente
 
     else:
-        return -3 # String vacio
+        numero_sanitizado = -3 # String vacio
+    
+    return numero_sanitizado
+
+# Punto 3.2
+def sanitizar_flotante(numero_str: str)-> float:
+    '''
+    Parametros:
+    Un string que representa un posible numero flotante
+
+    La funcion eliminara los espacios vacios que el string tenga en 
+    el inicio o en el fin, si es que los tiene.
+    En caso de que el string represente un numero flotante lo casteara
+    a ese tipo de dato.
+
+    Retorna:
+    El string casteado Si el numero es positivo
+    -1 Si hay un caracter no numerico
+    -2 Si el string casteado es negativo
+    -3 Si el string esta vacio
+    '''
+    if re.findall("^ | $", numero_str) != []:
+        numero_str = numero_str.strip()
+
+    if len (numero_str) > 0:
+
+        reg_ex_float = "^[+-]?[0-9]+(\.[0-9]+)?$"
+        if re.findall(reg_ex_float, numero_str) != []:
+            numero_str = float (numero_str)
+            if numero_str > 0:
+                numero_sanitizado = numero_str # String representa un numero positivo
+            else:
+                numero_sanitizado = -2 # String no representa un numero negativo o cero
+
+        else:
+            numero_sanitizado = -1  # Caracter no numerico presente
+
+    else:
+        numero_sanitizado = -3 # String vacio
+    
+    return numero_sanitizado
 
 
+# Punto 3.3
+def sanitizar_string(texto_str: str, valor_default = "-") -> str:
+    '''
+    Parametros:
+    Un string que es posible represente palabras
+    Otro string que se usara en caso que el primer string sea vacio
 
-print(sanitizar_entero("hola 23"))
+    Elimina los espacios vacios o las '/', si es
+    que los hay. Dependiendo lo que represente el string, el valor
+    de retorno cambia
+
+    Retorna:
+    El string pasado a minuscula Si solo hay letras
+    El string de 'respaldo' si el primer string esta vacio
+    'N/A' Si hay otro tipo de caracter en el string
+    '''
+    if texto_str.count("/") > 0:
+        texto_str = re.sub("/", " ", texto_str)
+        
+    if re.findall("^ | $", texto_str) != []:
+        texto_str = texto_str.strip()
+
+    
+    if len (texto_str) > 0:
+        reg_ex_palabras = "^[a-z A-Z]+$"
+        if re.findall(reg_ex_palabras, texto_str) != []:
+            texto_str = texto_str.lower()
+            return texto_str
+        else:
+            return "N/A"
+
+    elif valor_default != "-":
+            if re.findall("^ | $", texto_str) != []:
+                texto_str = texto_str.strip()
+            return valor_default.lower()
+
+# Punto 3.4
+def sanitizar_dato(personaje: dict, clave: str, tipo_dato: str) -> bool:
+    '''
+    Parametros:
+    Un diccionario que representa los datos del personaje
+    Un string que representa un dato del personaje
+    Otro string que determina el tipo de sanitizacion
+
+    Verifica que la clave pasada como parametro exista en el diccionario y
+    que el tipo de sanitizacion sea valido. Si todas las condiciones se cumplen,
+    se llama a una de las funciones sanitizar, si no hay inconvenientes el dato es
+    normalizado y se asigna ese valor a la clave del diccionario correspondiente
+
+    Retorna:
+    True; Si el dato es normalizado con exito
+    False; Si hubo un error
+    '''
+    dato_normalizado = False
+    if personaje.get(clave) == None:
+        print ("La clave no existe")
+        
+    else:
+        tipo_dato = tipo_dato.lower()
+        if re.findall("^(string|entero|flotante){1}$", tipo_dato) == []:
+            print ("Tipo de dato no renocido")
+           
+        else:
+            match (tipo_dato):
+                case "string":
+                    dato_sanitizado = sanitizar_string(personaje[clave], "Undefined")
+                    if dato_sanitizado != "N/A":
+                        dato_normalizado = True
+                        
+                case "flotante":
+                    dato_sanitizado = sanitizar_flotante(personaje[clave])
+                    if dato_sanitizado > 0:
+                        dato_normalizado = True
+                        
+                case "entero":
+                    dato_sanitizado = sanitizar_entero(personaje[clave])
+                    if dato_sanitizado > 0:
+                        dato_normalizado = True
+                        
+    if dato_normalizado:
+        personaje[clave] = dato_sanitizado
+
+    return dato_normalizado
+
+# Auxiliar Punto 3.5
+def normalizar_dato(personaje, clave, tipo_dato):
+    '''
+    En caso de que haya un error al normalizar, se informara el personaje
+    y el dato que provoco el error, eso no detendra la normalizacion de los
+    datos de los demas personajes
+    '''
+    dato_normalizado = sanitizar_dato(personaje, clave, tipo_dato)
+    if not dato_normalizado:
+         print("Error al normalizar {0} de {1}".format(clave,personaje["nombre"]))
+
+# Punto 3.5
+def stark_normalizar_datos(personajes: list):
+    '''
+    Parametros:
+    Una lista de diccionarios con los datos de los personajes
+
+    Validara si la lista pasada como parametro tiene almenos un elemento
+    Normaliza los datos de los personajes a traves de las funciones anteriores
+    Despues de terminar de normalizar los datos, imprimira un mensaje
+    Informa en caso de error
+    '''
+    if type(personajes) == type([]) and len(personajes) > 0:
+        
+        for personaje in personajes:
+            normalizar_dato(personaje, "altura", "flotante")
+            normalizar_dato(personaje, "peso", "flotante")
+            normalizar_dato(personaje, "fuerza", "entero")
+            normalizar_dato(personaje, "color_ojos", "string")
+            normalizar_dato(personaje, "color_pelo", "string")
+            normalizar_dato(personaje, "inteligencia", "string")
+
+        print("Datos normalizados")
+    else:
+        print("Error! No es una lista")
+
+
