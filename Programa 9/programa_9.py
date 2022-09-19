@@ -1,4 +1,3 @@
-from operator import le
 from data_stark import lista_personajes
 import re
 # Punto 1.1
@@ -206,20 +205,38 @@ def sanitizar_entero(numero_str: str)-> int:
     Parametros:
     Un string que representa un posible numero entero
 
+    La funcion eliminara los espacios vacios que el string tenga en 
+    el inicio o en el fin, si es que los tiene.
+    En caso de que el string represente un numero entero lo casteara
+    a ese tipo de dato.
+
     Retorna:
-
+    El string casteado Si el numero es positivo
+    -1 Si hay un caracter no numerico
+    -2 Si el string casteado es negativo
+    -3 Si el string esta vacio
     '''
-    if len(numero_str) > 0:
-        lista_prueba = re.findall("-?[0-9]+", numero_str)
-        if len(lista_prueba) == 1:
-            numero = int (lista_prueba[0])
-            if numero > -1:
-                return numero
-            else:
-                return -2
-        elif len(lista_prueba) > 1:
-            return -3
-        else:
-            return -1
+    if re.findall("^ | $", numero_str) != []:
+        numero_str = numero_str.strip()
 
-sanitizar_entero("2Hola13")
+    if len (numero_str) > 0:
+
+        re_entero = "^-?[0-9]+$"
+        lista_numero = re.findall(re_entero, numero_str)
+        if len(lista_numero) == 1 and lista_numero[0] == numero_str:
+           
+            numero_str = int (numero_str)
+            if numero_str > 0:
+                return numero_str # String representa un numero positivo
+            else:
+                return -2 # String no representa un numero positivo
+
+        else:
+            return -1  # Caracter no numerico presente
+
+    else:
+        return -3 # String vacio
+
+
+
+print(sanitizar_entero("hola 23"))
