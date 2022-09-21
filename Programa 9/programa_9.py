@@ -1,6 +1,10 @@
-from subprocess import list2cmdline
+# Uño Mauricio Ejercicio 9
+
 from data_stark import lista_personajes
 import re
+
+#-------- Primera Parte --------#
+
 # Punto 1.1
 def extraer_iniciales(nombre_personaje: str) -> str:
     '''
@@ -36,7 +40,6 @@ def extraer_iniciales(nombre_personaje: str) -> str:
         iniciales= "N/A"        
 
     return iniciales
-
 
 
 # Punto 1.2
@@ -114,6 +117,7 @@ def stark_imprimir_nombres_con_iniciales(personajes: list):
 
 
 
+#-------- Segunda Parte --------#
 
 # Punto 2.1
 def generar_codigo_personaje(id: int, genero: str) -> str:
@@ -192,15 +196,20 @@ def stark_generar_codigos_personaje(personajes: list):
             id_personaje += 1
         
         if generacion_de_codigos:    
-            mensaje_codigos = "Se asignaron {0} codigos".format(len(lista_personajes))
-            mensaje_codigos += "\nEl codigo del primer heroe es: {0}".format(lista_personajes[0]["codigo"])
-            mensaje_codigos += "\nEl codigo del ultimo heroe es: {0}".format(lista_personajes[-1]["codigo"])
+            mensaje_codigos ="Se asignaron {0} codigos\
+                            \nEl codigo del primer personaje es: {1}\
+                            \nEl codigo del ultimo personaje es: {2}\
+                            ".format(len(lista_personajes), lista_personajes[0]["codigo"], lista_personajes[-1]["codigo"])
+
             print(mensaje_codigos)
         else:
             print("El origen de datos no contiene el formato correcto!")
     else:
         print("Error, no es una lista")
 
+
+
+#-------- Tercera Parte --------#
 
 # Punto 3.1
 def sanitizar_entero(numero_str: str) -> int:
@@ -239,6 +248,7 @@ def sanitizar_entero(numero_str: str) -> int:
         numero_sanitizado = -3 # String vacio
     
     return numero_sanitizado
+
 
 # Punto 3.2
 def sanitizar_flotante(numero_str: str)-> float:
@@ -317,6 +327,7 @@ def sanitizar_string(texto_str: str, valor_default = "-") -> str:
     
     return texto_sanitizado
 
+
 # Punto 3.4
 def sanitizar_dato(personaje: dict, clave: str, tipo_dato: str) -> bool:
     '''
@@ -365,6 +376,7 @@ def sanitizar_dato(personaje: dict, clave: str, tipo_dato: str) -> bool:
 
     return dato_normalizado
 
+
 # Auxiliar Punto 3.5
 def normalizar_dato(personaje, clave, tipo_dato):
     '''
@@ -375,7 +387,6 @@ def normalizar_dato(personaje, clave, tipo_dato):
     dato_normalizado = sanitizar_dato(personaje, clave, tipo_dato)
     if not dato_normalizado:
          print("Error al normalizar {0} de {1}".format(clave,personaje["nombre"]))
-
 # Punto 3.5
 def stark_normalizar_datos(personajes: list):
     '''
@@ -401,6 +412,9 @@ def stark_normalizar_datos(personajes: list):
     else:
         print("Error! No es una lista")
 
+
+
+#-------- Cuarta Parte --------#
 
 # Punto 4.1
 def generar_indice_nombres(personajes: list) -> list:
@@ -437,7 +451,6 @@ def generar_indice_nombres(personajes: list) -> list:
         print("El origen de datos no contiene el formato correcto")       
     
 
-
 # Punto 4.2
 def stark_imprimir_indice_nombre(personajes: list):
     '''
@@ -453,6 +466,8 @@ def stark_imprimir_indice_nombre(personajes: list):
         print(mensaje_palabras_nombres)
 
 
+
+#-------- Quinta Parte --------#
 
 # Punto 5.1
 def centimetro_a_metro(numero_cm: float)-> float:
@@ -476,7 +491,19 @@ def centimetro_a_metro(numero_cm: float)-> float:
     
 # Punto 5.2
 def generar_separador(patron: str, largo: int, imprimir = True) -> str:
+    '''
+    Parametros:
+    - String con 1 a 2 caracteres representando el patron del separador
+    - Entero representando el largo del separador
+    - Un booleano que determina si imprimos el separador antes de retornarlo
 
+    La funcion creara un string que representa al separador, que se genera
+    en funcion de los parametros patron y largo.
+
+    Retorna:
+    - El string separador
+    - 'N/A' En caso de haber algun error
+    '''
     separador = "N/A"
     if type(largo) == int and largo > 0 and largo < 236:
 
@@ -491,49 +518,71 @@ def generar_separador(patron: str, largo: int, imprimir = True) -> str:
     return separador
     
 
-
-
 # Punto 5.3
-def generar_encabezado(titulo: str):
+def generar_encabezado(titulo: str) -> str:
+    '''
+    Parametros:
+    - String que representa el titulo del encabezado
 
+    Todas las letras del titulo se pasaran a mayuscula, se generara
+    un string que represente al titulo entre dos separadores (el encabezado)
+
+    Retorna:
+    - El string encabezado
+    '''
     titulo = titulo.upper()
-    encabezado = generar_separador("*",60, False) + "\n"
-    encabezado += titulo + "\n" 
-    encabezado += generar_separador("*", 60, False)
+    separador = generar_separador("*",60, False)
+    encabezado = separador + "\n" + titulo + "\n" + separador 
     return encabezado
     
 
 # Punto 5.4
 def imprimir_ficha_personaje(personaje: dict):
+    '''
+    Parametros:
+    - Un diccionario con los datos de un personaje
 
+    Imprime un string en forma de ficha que representa 
+    varios datos del personaje. La altura del personaje
+    se representa en metros
+    '''
     altura_personaje = centimetro_a_metro(personaje["altura"])
-    ficha = generar_encabezado("Datos principales")
-    ficha +="\nNombre del heroe:       {0} ({4})\
+    
+    datos_principales = generar_encabezado("Datos principales")
+    datos_principales += "\
+            \nNombre del heroe:       {0} ({4})\
             \nIdentidad secreta:      {1}\
             \nConsultora:             {2}\
-            \nCódigo de heroe:        {3}\n"\
-            .format(personaje["nombre"], personaje["identidad"], personaje["empresa"], personaje["codigo"], personaje["iniciales"])
+            \nCódigo de heroe:        {3}\
+            \n".format(personaje["nombre"], personaje["identidad"], personaje["empresa"], personaje["codigo"], personaje["iniciales"])
 
-    ficha += generar_encabezado("Fisico")
-    ficha +="\nAltura:                 {0:.2f} Metros\
+    fisico = generar_encabezado("Fisico")
+    fisico += "\
+            \nAltura:                 {0:.2f} Metros\
             \nPeso:                   {1} KG\
-            \nFuerza:                 {2}\n"\
-            .format(altura_personaje, personaje["peso"], personaje["fuerza"])
+            \nFuerza:                 {2}\
+            \n".format(altura_personaje, personaje["peso"], personaje["fuerza"])
 
-    ficha += generar_encabezado("Señas particulares")
-    ficha +="\nColor de ojos:          {0}\
-            \nColor de pelos:         {1}\n"\
-            .format(personaje["color_ojos"], personaje["color_pelo"])
+    señas_particulares = generar_encabezado("Señas particulares")
+    señas_particulares += "\
+            \nColor de ojos:          {0}\
+            \nColor de pelos:         {1}\
+            \n".format(personaje["color_ojos"], personaje["color_pelo"])
 
-
-    print(ficha)
-
-
+    ficha_del_heroe = datos_principales + fisico + señas_particulares
+    print(ficha_del_heroe)
 
 
 # Punto 5.5
 def stark_navegar_fichas(personajes):
-    
+    '''
+    Parametros:
+    - Lista de diccionarios con datos del personaje correspondiente
+
+    Mediante un menu de opciones permite navegar entre las
+    fichas de los personajes. En caso de seleccionar 'S' se volvera
+    al menu principal. Se informara si se elige una opcion no valida
+    '''
     indice = 0
     while True:    
         imprimir_ficha_personaje(personajes[indice])
@@ -547,16 +596,24 @@ def stark_navegar_fichas(personajes):
                 indice += 1
 
             case "S":
-                print("Volviendo al menu principal")
+                print("Volviendo al menu principal...")
                 break
             
             case _:
                 print("Ingrese una opcion valida!")
+        
+        if indice == len(personajes) or indice == -len(personajes):
+            indice = 0
+
+
+#-------- Sexta Parte --------#
 
 # Punto 6.1
 def imprimir_menu():
-
-    menu = "Opciones:\
+    '''
+    Imprime las opciones del menu principal
+    '''
+    menu_principal = "\nOpciones:\
             \n1- Imprimir la lista de nombres junto con sus iniciales\
             \n2- Generar codigo Heroes\
             \n3- Normalizar datos\
@@ -564,12 +621,18 @@ def imprimir_menu():
             \n5- Navegar fichas\
             \nS- Salir"
 
-    print(menu)
+    print(menu_principal)
 
 
 # Punto 6.2
-def stark_menu_principal():
+def stark_menu_principal() -> str:
+    '''
+    Llama a la funcion imprimir_menu, luego de eso espera la eleccion
+    del usuario
 
+    Retorna:
+    - Un string que representa la opcion del usuario
+    '''
     imprimir_menu()
     opcion = input(">> ")
 
@@ -578,25 +641,47 @@ def stark_menu_principal():
 
 # Punto 6.3
 def stark_marvel_app(personajes):
+    '''
+    Parametros:
+    - Una lista de diccionarios con los datos del personaje correspondiente
 
+    En funcion del dato obtenido al llamar a 'stark_menu_principal' se llamaran
+    a distintas funciones
+    \nNota:
+    - La opcion '3' solo se podra ejecutar una vez
+    - La funcion de la eleccion '5' solo se podra ejecutar cuando se hayan
+      seleccionado las opciones '1', '2' y '3'
+    '''
+    iniciales = False
+    codigos = False
+    normalizados = False
     while True:
         opcion = stark_menu_principal()
         opcion = opcion.upper()
         match opcion:
             case "1":
                 stark_imprimir_nombres_con_iniciales(personajes)
+                iniciales = True
 
             case "2":
                 stark_generar_codigos_personaje(personajes)
+                codigos = True
 
             case "3":
-                stark_normalizar_datos(personajes)
+                if not normalizados:
+                    stark_normalizar_datos(personajes)
+                    normalizados = True
+                else:
+                    print("Los datos ya estan normalizados!")
 
             case "4":
                 stark_imprimir_indice_nombre(personajes)
 
             case "5":
-                stark_navegar_fichas(personajes)
+                if iniciales and codigos and normalizados:
+                    stark_navegar_fichas(personajes)
+                else:
+                    print("Antes de navegar las fichas se deben seleccionar las opciones 1, 2 y 3")
 
             case "S":
                 print("Adios!")
@@ -604,6 +689,7 @@ def stark_marvel_app(personajes):
             
             case _:
                 print("Ingrese una opcion correcta")
+
 
 
 stark_marvel_app(lista_personajes)
