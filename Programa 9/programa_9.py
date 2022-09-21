@@ -4,6 +4,22 @@ from data_stark import lista_personajes
 import re
 
 #-------- Primera Parte --------#
+# Auxiliar Punto 1.1
+def reemplazar_en_string(valor_viejo: str, valor_nuevo, el_string: str) -> str:
+    '''
+    Parametros:
+    - el_string: La variable pasada como parametro
+    - valor_viejo: Lo que buscaremos en el_string
+    - valor_nuevo: Lo que reemplazara a valor_viejo en el_string, en caso de encontrarlo.
+
+    Retorna:
+    - El string con los valores reemplazados
+    - El string sin cambios, si no encuentra a valor_viejo dentro del texto               
+    '''
+    if re.search(valor_viejo, el_string) != None:
+            el_string = re.sub(valor_viejo, valor_nuevo, el_string)
+
+    return el_string
 
 # Punto 1.1
 def extraer_iniciales(nombre_personaje: str) -> str:
@@ -17,17 +33,14 @@ def extraer_iniciales(nombre_personaje: str) -> str:
     
     Retorna:
     - El string que representa las iniciales
-    - 'N/A' si el string se encuentra vacio
+    - 'N/A' si hay un error
     '''
-    if len(re.findall("[A-Za-z]+", nombre_personaje)) > 0:
+    if re.search("[A-Za-z]+", nombre_personaje) != None:
         
         nombre_personaje = nombre_personaje.upper()
 
-        if nombre_personaje.count("-") > 0:
-            nombre_personaje = re.sub("-", " ", nombre_personaje)
-
-        if nombre_personaje.count("THE") > 0:
-            nombre_personaje = re.sub("THE ", "", nombre_personaje)
+        nombre_personaje = reemplazar_en_string("-", " ", nombre_personaje)
+        nombre_personaje = reemplazar_en_string("THE ", "", nombre_personaje)
 
         nombre_personaje = nombre_personaje.strip()
         palabras = re.findall("[A-Z]+",nombre_personaje)
@@ -56,7 +69,7 @@ def definir_iniciales_nombre(personaje: dict) -> bool:
     True en caso de que la funcion se ejecute sin problemas
     False si no se cumple la condicion
     '''
-    if type(personaje) == type({}) and personaje.get("nombre") != None: 
+    if type(personaje) == type({}) and "nombre" in personaje.keys(): 
         personaje["iniciales"] = extraer_iniciales(personaje["nombre"])
         inicial_definida = True
     else:
@@ -113,7 +126,7 @@ def stark_imprimir_nombres_con_iniciales(personajes: list):
                 print(mensaje_nombre_iniciales)
         
     else:
-        print("Error, no es una lista")
+        print("Error, el parametro dado no es una lista!")
 
 
 
@@ -132,10 +145,11 @@ def generar_codigo_personaje(id: int, genero: str) -> str:
     El string creado
     "N/A" si no tiene genero o id
     '''
-    if type(id) == int and re.findall("^(M|F|NB){1}$", genero) != []:
+    if type(id) == int and re.search("^(M|F|NB){1}$", genero) != None:
         mensaje_genero = "{0}-".format(genero)
         mensaje_id = "{0}".format(id).zfill(10 - len(mensaje_genero))
         mensaje_genero_e_id = mensaje_genero + mensaje_id
+
     else:
         mensaje_genero_e_id = "N/A"
 
@@ -182,35 +196,48 @@ def stark_generar_codigos_personaje(personajes: list):
     '''
     if type (personajes) == type ([]) and len(personajes) > 0:
 
-        id_personaje = 1
+        validacion_diccionario = True
         for personaje in personajes:
-            if type (personaje) == type({}) or personaje.get("genero") != None:
-                generacion_de_codigos = agregar_codigo_personaje(personaje, id_personaje)
+            if type (personaje) != type({}) or not("genero" in personaje.keys()):
+                validacion_diccionario = False
+                break
+                
+        if validacion_diccionario:
+            id_personaje = 1
+            for personaje in personajes:
+                codigo_generado = agregar_codigo_personaje(personaje, id_personaje)
+                if not codigo_generado:
+                    break
+                id_personaje += 1
+
+            if codigo_generado:    
+                mensaje_codigos ="Se asignaron {0} codigos\
+                                \nEl codigo del primer personaje es: {1}\
+                                \nEl codigo del ultimo personaje es: {2}\
+                                ".format(len(lista_personajes), lista_personajes[0]["codigo"], lista_personajes[-1]["codigo"])
+                print(mensaje_codigos)
 
             else:
-                generacion_de_codigos = False
-            
-            if not generacion_de_codigos:
-                break
-            
-            id_personaje += 1
-        
-        if generacion_de_codigos:    
-            mensaje_codigos ="Se asignaron {0} codigos\
-                            \nEl codigo del primer personaje es: {1}\
-                            \nEl codigo del ultimo personaje es: {2}\
-                            ".format(len(lista_personajes), lista_personajes[0]["codigo"], lista_personajes[-1]["codigo"])
-
-            print(mensaje_codigos)
+                print("Uno de los personajes no tiene un genero valido")
         else:
-            print("El origen de datos no contiene el formato correcto!")
+            print("Error, uno de los elementos de la lista no es un diccionario con la clave 'genero'")
     else:
-        print("Error, no es una lista")
+        print("Error, el parametro dado no es una lista!")
 
 
 
 #-------- Tercera Parte --------#
-
+# Auxiliar sanitizaciones
+def eliminar_vacio(el_string: str) -> str:
+    '''
+    Retorna el string pasado como parametro 
+    con los espacios vacios eliminados, si es que los hay
+    '''
+    if re.search("^ | $", el_string) != None:
+        el_string = el_string.strip()
+    
+    return el_string
+    
 # Punto 3.1
 def sanitizar_entero(numero_str: str) -> int:
     '''
@@ -228,13 +255,12 @@ def sanitizar_entero(numero_str: str) -> int:
     -2 Si el string casteado es negativo
     -3 Si el string esta vacio
     '''
-    if re.findall("^ | $", numero_str) != []:
-        numero_str = numero_str.strip()
+    numero_str = eliminar_vacio(numero_str)
 
     if len (numero_str) > 0:
 
         reg_ex_int = "^[+-]?[0-9]+$"
-        if re.findall(reg_ex_int, numero_str) != []:
+        if re.search(reg_ex_int, numero_str) != None:
             numero_str = int (numero_str)
             if numero_str > 0:
                 numero_sanitizado = numero_str # String representa un numero positivo
@@ -267,13 +293,11 @@ def sanitizar_flotante(numero_str: str)-> float:
     -2 Si el string casteado es negativo
     -3 Si el string esta vacio
     '''
-    if re.findall("^ | $", numero_str) != []:
-        numero_str = numero_str.strip()
-
+    numero_str = eliminar_vacio(numero_str)
     if len (numero_str) > 0:
 
         reg_ex_float = "^[+-]?[0-9]+(\.[0-9]+)?$"
-        if re.findall(reg_ex_float, numero_str) != []:
+        if re.search(reg_ex_float, numero_str) != None:
             numero_str = float (numero_str)
             if numero_str > 0:
                 numero_sanitizado = numero_str # String representa un numero positivo
@@ -305,25 +329,22 @@ def sanitizar_string(texto_str: str, valor_default = "-") -> str:
     El string de 'respaldo' si el primer string esta vacio
     'N/A' Si hay otro tipo de caracter en el string
     '''
-    if texto_str.count("/") > 0:
-        texto_str = re.sub("/", " ", texto_str)
-        
-    if re.findall("^ | $", texto_str) != []:
-        texto_str = texto_str.strip()
+    
+    texto_str = reemplazar_en_string("/", " ", texto_str)
+    texto_str = eliminar_vacio(texto_str)
 
     
     if len (texto_str) > 0:
-        reg_ex_palabras = "^[a-z A-Z()]+$"
-        if re.findall(reg_ex_palabras, texto_str) != []:
+        reg_ex_palabras = "^[a-z A-Z()-]+$"
+        if re.search(reg_ex_palabras, texto_str) != None:
             texto_str = texto_str.lower()
             texto_sanitizado = texto_str # String representa palabras
         else:
             texto_sanitizado = "N/A" # String tiene un caracter que no es una letra
 
-    elif valor_default != "-":
-            if re.findall("^ | $", texto_str) != []:
-                texto_str = texto_str.strip()
-            texto_sanitizado = valor_default.lower() # El primer string esta vacio y se usa el string opcional
+    else:
+        valor_default = eliminar_vacio(valor_default)
+        texto_sanitizado = valor_default.lower() # El primer string esta vacio y se usa el string opcional
     
     return texto_sanitizado
 
@@ -346,30 +367,28 @@ def sanitizar_dato(personaje: dict, clave: str, tipo_dato: str) -> bool:
     False; Si hubo un error
     '''
     dato_normalizado = False
-    if personaje.get(clave) == None:
-        print ("La clave no existe")
+    if not (clave in personaje.keys()):
+        print ("La clave especificada no existe en el personaje")
         
     else:
         tipo_dato = tipo_dato.lower()
-        if re.findall("^(string|entero|flotante){1}$", tipo_dato) == []:
-            print ("Tipo de dato no renocido")
-           
-        else:
-            match (tipo_dato):
-                case "string":
-                    dato_sanitizado = sanitizar_string(personaje[clave], "Undefined")
-                    if dato_sanitizado != "N/A":
-                        dato_normalizado = True
-                        
-                case "flotante":
-                    dato_sanitizado = sanitizar_flotante(personaje[clave])
-                    if dato_sanitizado > 0:
-                        dato_normalizado = True
-                        
-                case "entero":
-                    dato_sanitizado = sanitizar_entero(personaje[clave])
-                    if dato_sanitizado > 0:
-                        dato_normalizado = True
+        match (tipo_dato):
+            case "string":
+                dato_sanitizado = sanitizar_string(personaje[clave], "Undefined")
+                if dato_sanitizado != "N/A":
+                    dato_normalizado = True
+                    
+            case "flotante":
+                dato_sanitizado = sanitizar_flotante(personaje[clave])
+                if dato_sanitizado > 0:
+                    dato_normalizado = True
+                    
+            case "entero":
+                dato_sanitizado = sanitizar_entero(personaje[clave])
+                if dato_sanitizado > 0:
+                    dato_normalizado = True
+            case _:
+                print("Tipo de dato no renocido")
                         
     if dato_normalizado:
         personaje[clave] = dato_sanitizado
@@ -410,7 +429,7 @@ def stark_normalizar_datos(personajes: list):
 
         print("Datos normalizados")
     else:
-        print("Error! No es una lista")
+        print("Error, el parametro dado no es una lista")
 
 
 
@@ -432,16 +451,22 @@ def generar_indice_nombres(personajes: list) -> list:
     Nada en caso de error
     '''
     retornar_lista = True
-    lista_palabras = []
     if type(personajes) == type([]) and len(personajes) > 0:
+
+        validacion_diccionario = True
         for personaje in personajes:
-            if type (personaje) == type({}) and personaje.get("nombre") != None:
+            if type (personaje) != type({}) or not("nombre" in personaje.keys()):
+                validacion_diccionario = False
+                break
+
+        if validacion_diccionario:
+            lista_palabras = []
+            for personaje in personajes:
                 palabras_nombre = re.findall("[a-zA-Z]+",personaje["nombre"])
                 for palabra in palabras_nombre:
                     lista_palabras.append(palabra)
-            else:
-                retornar_lista = False
-                break
+        else:
+            retornar_lista = False
     else:
         retornar_lista = False
 
@@ -507,7 +532,7 @@ def generar_separador(patron: str, largo: int, imprimir = True) -> str:
     separador = "N/A"
     if type(largo) == int and largo > 0 and largo < 236:
 
-        if re.findall("^.{1,2}$", patron) != []:
+        if re.search("^.{1,2}$", patron) != None:
             separador = ""
             while len(separador) < largo:
                 separador += patron
@@ -588,7 +613,9 @@ def stark_navegar_fichas(personajes):
         imprimir_ficha_personaje(personajes[indice])
         opcion = input("[1] A la izquierda   [2] A la derecha   [S] Salir \n>> ")
         opcion = opcion.upper()
+
         match (opcion):
+
             case "1":
                 indice -= 1
                 
