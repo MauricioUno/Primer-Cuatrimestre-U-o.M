@@ -211,7 +211,7 @@ def stark_generar_codigos_personaje(personajes: list):
                 id_personaje += 1
 
             if codigo_generado:    
-                mensaje_codigos ="Se asignaron {0} codigos\
+                mensaje_codigos ="Se generaron {0} codigos\
                                 \nEl codigo del primer personaje es: {1}\
                                 \nEl codigo del ultimo personaje es: {2}\
                                 ".format(len(lista_personajes), lista_personajes[0]["codigo"], lista_personajes[-1]["codigo"])
@@ -227,7 +227,7 @@ def stark_generar_codigos_personaje(personajes: list):
 
 
 #-------- Tercera Parte --------#
-# Auxiliar sanitizaciones
+# Auxiliar sanitizaciones 1
 def eliminar_vacio(el_string: str) -> str:
     '''
     Retorna el string pasado como parametro 
@@ -237,7 +237,38 @@ def eliminar_vacio(el_string: str) -> str:
         el_string = el_string.strip()
     
     return el_string
+
+# Auxiliar sanitizaciones 2
+def sanitizar_numero(tipo_numero: type, reg_ex: str, numero_str: str) -> int:
+    '''
+    Parametros:
+    - tipo_numero: El tipo de numero al que se casteara el string
+    - reg_ex: Un string representa la expresion regular del tipo de numero a castear
+    - numero_str: El posible numero en tipo string
+
+    Retorna:
+    - El numero sanitizado en caso que sea mayor a 0
+    - -1 Si el numero sanitizado no es positivo
+    - -2 Si hay un caracter que no corresponda al de la expresion regular
+    - -3 Si el string esta vacio 
+    '''
+    if len (numero_str) > 0:
+
+        if re.search(reg_ex, numero_str) != None:
+            numero_str = tipo_numero (numero_str)
+            if numero_str > 0:
+                numero_sanitizado = numero_str # String representa un numero positivo
+            else:
+                numero_sanitizado = -2 # String representa un numero negativo o cero
+
+        else:
+            numero_sanitizado = -1  # Caracter no correspondiente a la reg_ex presente
+
+    else:
+        numero_sanitizado = -3 # String vacio
     
+    return numero_sanitizado
+
 # Punto 3.1
 def sanitizar_entero(numero_str: str) -> int:
     '''
@@ -250,29 +281,14 @@ def sanitizar_entero(numero_str: str) -> int:
     a ese tipo de dato.
 
     Retorna:
-    El string casteado Si el numero es positivo
-    -1 Si hay un caracter no numerico
-    -2 Si el string casteado es negativo
-    -3 Si el string esta vacio
+    - El string casteado si el numero es positivo
+    - -1 Si hay un caracter no correspondiente a un numero entero
+    - -2 Si el string casteado es negativo
+    - -3 Si el string esta vacio
     '''
     numero_str = eliminar_vacio(numero_str)
 
-    if len (numero_str) > 0:
-
-        reg_ex_int = "^[+-]?[0-9]+$"
-        if re.search(reg_ex_int, numero_str) != None:
-            numero_str = int (numero_str)
-            if numero_str > 0:
-                numero_sanitizado = numero_str # String representa un numero positivo
-            else:
-                numero_sanitizado = -2 # String no representa un numero negativo o cero
-
-        else:
-            numero_sanitizado = -1  # Caracter no numerico presente
-
-    else:
-        numero_sanitizado = -3 # String vacio
-    
+    numero_sanitizado = sanitizar_numero(int, "^[+-]?[0-9]+$", numero_str)
     return numero_sanitizado
 
 
@@ -288,28 +304,14 @@ def sanitizar_flotante(numero_str: str)-> float:
     a ese tipo de dato.
 
     Retorna:
-    El string casteado Si el numero es positivo
-    -1 Si hay un caracter no numerico
-    -2 Si el string casteado es negativo
-    -3 Si el string esta vacio
+    - El string casteado Si el numero es positivo
+    - -1 Si hay un caracter no correspondiente a un numero flotante
+    - -2 Si el string casteado es negativo
+    - -3 Si el string esta vacio
     '''
     numero_str = eliminar_vacio(numero_str)
-    if len (numero_str) > 0:
 
-        reg_ex_float = "^[+-]?[0-9]+(\.[0-9]+)?$"
-        if re.search(reg_ex_float, numero_str) != None:
-            numero_str = float (numero_str)
-            if numero_str > 0:
-                numero_sanitizado = numero_str # String representa un numero positivo
-            else:
-                numero_sanitizado = -2 # String no representa un numero negativo o cero
-
-        else:
-            numero_sanitizado = -1  # Caracter no numerico presente
-
-    else:
-        numero_sanitizado = -3 # String vacio
-    
+    numero_sanitizado = sanitizar_numero(float, "^[+-]?[0-9]+(\.[0-9]+)?$", numero_str)
     return numero_sanitizado
 
 
@@ -641,8 +643,8 @@ def imprimir_menu():
     Imprime las opciones del menu principal
     '''
     menu_principal = "\nOpciones:\
-            \n1- Imprimir la lista de nombres junto con sus iniciales\
-            \n2- Generar codigo Heroes\
+            \n1- Imprimir nombres de los personajes junto con sus iniciales\
+            \n2- Generar codigo para cada personaje\
             \n3- Normalizar datos\
             \n4- Imprimir indice de nombres\
             \n5- Navegar fichas\
@@ -716,6 +718,7 @@ def stark_marvel_app(personajes):
             
             case _:
                 print("Ingrese una opcion correcta")
+        
 
 
 
