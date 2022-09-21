@@ -674,12 +674,12 @@ def stark_marvel_app(personajes):
     Parametros:
     - Una lista de diccionarios con los datos del personaje correspondiente
 
-    En funcion del dato obtenido al llamar a 'stark_menu_principal' se llamaran
+    En funcion del dato ingresado por el usuario se llamaran
     a distintas funciones
     \nNota:
     - La opcion '3' solo se podra ejecutar una vez
-    - La funcion de la eleccion '5' solo se podra ejecutar cuando se hayan
-      seleccionado las opciones '1', '2' y '3'
+    - La funcion de la opcion '5' solo se podra ejecutar cuando se hayan
+      ejecutado las opciones '1', '2' y '3'
     '''
     iniciales = False
     codigos = False
