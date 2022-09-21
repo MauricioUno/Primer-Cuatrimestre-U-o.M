@@ -1,3 +1,4 @@
+from subprocess import list2cmdline
 from data_stark import lista_personajes
 import re
 # Punto 1.1
@@ -302,7 +303,7 @@ def sanitizar_string(texto_str: str, valor_default = "-") -> str:
 
     
     if len (texto_str) > 0:
-        reg_ex_palabras = "^[a-z A-Z]+$"
+        reg_ex_palabras = "^[a-z A-Z()]+$"
         if re.findall(reg_ex_palabras, texto_str) != []:
             texto_str = texto_str.lower()
             texto_sanitizado = texto_str # String representa palabras
@@ -452,7 +453,157 @@ def stark_imprimir_indice_nombre(personajes: list):
         print(mensaje_palabras_nombres)
 
 
-stark_imprimir_indice_nombre(lista_personajes)
+
 # Punto 5.1
+def centimetro_a_metro(numero_cm: float)-> float:
+    '''
+    Parametros:
+    Un numero flotante que representa una medida en centimetros
+
+    La funcion dividira por 100 al parametro recibido para que mida
+    en metros.
+
+    Retorna:
+    El numero flotante convertido
+    -1 En caso que el numero no sea mayor a 0
+    '''
+    if (type(numero_cm) == float or type(numero_cm) == int) and numero_cm > 0:
+        numero_metros = numero_cm / 100
+        return numero_metros
+    else:
+        return -1
+
+    
+# Punto 5.2
+def generar_separador(patron: str, largo: int, imprimir = True) -> str:
+
+    separador = "N/A"
+    if type(largo) == int and largo > 0 and largo < 236:
+
+        if re.findall("^.{1,2}$", patron) != []:
+            separador = ""
+            while len(separador) < largo:
+                separador += patron
+
+    if imprimir:
+        print(separador)
+
+    return separador
+    
 
 
+
+# Punto 5.3
+def generar_encabezado(titulo: str):
+
+    titulo = titulo.upper()
+    encabezado = generar_separador("*",60, False) + "\n"
+    encabezado += titulo + "\n" 
+    encabezado += generar_separador("*", 60, False)
+    return encabezado
+    
+
+# Punto 5.4
+def imprimir_ficha_personaje(personaje: dict):
+
+    altura_personaje = centimetro_a_metro(personaje["altura"])
+    ficha = generar_encabezado("Datos principales")
+    ficha +="\nNombre del heroe:       {0} ({4})\
+            \nIdentidad secreta:      {1}\
+            \nConsultora:             {2}\
+            \nCódigo de heroe:        {3}\n"\
+            .format(personaje["nombre"], personaje["identidad"], personaje["empresa"], personaje["codigo"], personaje["iniciales"])
+
+    ficha += generar_encabezado("Fisico")
+    ficha +="\nAltura:                 {0:.2f} Metros\
+            \nPeso:                   {1} KG\
+            \nFuerza:                 {2}\n"\
+            .format(altura_personaje, personaje["peso"], personaje["fuerza"])
+
+    ficha += generar_encabezado("Señas particulares")
+    ficha +="\nColor de ojos:          {0}\
+            \nColor de pelos:         {1}\n"\
+            .format(personaje["color_ojos"], personaje["color_pelo"])
+
+
+    print(ficha)
+
+
+
+
+# Punto 5.5
+def stark_navegar_fichas(personajes):
+    
+    indice = 0
+    while True:    
+        imprimir_ficha_personaje(personajes[indice])
+        opcion = input("[1] A la izquierda   [2] A la derecha   [S] Salir \n>> ")
+        opcion = opcion.upper()
+        match (opcion):
+            case "1":
+                indice -= 1
+                
+            case "2":
+                indice += 1
+
+            case "S":
+                print("Volviendo al menu principal")
+                break
+            
+            case _:
+                print("Ingrese una opcion valida!")
+
+# Punto 6.1
+def imprimir_menu():
+
+    menu = "Opciones:\
+            \n1- Imprimir la lista de nombres junto con sus iniciales\
+            \n2- Generar codigo Heroes\
+            \n3- Normalizar datos\
+            \n4- Imprimir indice de nombres\
+            \n5- Navegar fichas\
+            \nS- Salir"
+
+    print(menu)
+
+
+# Punto 6.2
+def stark_menu_principal():
+
+    imprimir_menu()
+    opcion = input(">> ")
+
+    return opcion
+
+
+# Punto 6.3
+def stark_marvel_app(personajes):
+
+    while True:
+        opcion = stark_menu_principal()
+        opcion = opcion.upper()
+        match opcion:
+            case "1":
+                stark_imprimir_nombres_con_iniciales(personajes)
+
+            case "2":
+                stark_generar_codigos_personaje(personajes)
+
+            case "3":
+                stark_normalizar_datos(personajes)
+
+            case "4":
+                stark_imprimir_indice_nombre(personajes)
+
+            case "5":
+                stark_navegar_fichas(personajes)
+
+            case "S":
+                print("Adios!")
+                break
+            
+            case _:
+                print("Ingrese una opcion correcta")
+
+
+stark_marvel_app(lista_personajes)
