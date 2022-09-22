@@ -47,104 +47,6 @@ def imprimir_dato(mensaje_a_imprimir: str):
     Imprime el string
     '''
     print(mensaje_a_imprimir)
-
-# Punto 1.1
-def imprimir_menu_desafio_cinco():
-    '''
-    Imprime el menu de opciones
-    '''
-    menu_desafio = "Opciones:\
-            \nA- Imprimir nombres de los personajes de género femenino\
-            \nB- Imprimir nombres de los personajes de género masculino\
-            \nC- Determinar el personaje mas alto (género M)\
-            \nD- Determinar el personaje mas alto (género F)\
-            \nE- Determinar el personaje mas bajo (género M)\
-            \nF- Determinar el personaje mas bajo (género M)\
-            \nG- Determinar el promedio de altura (género M)\
-            \nH- Determinar el promedio de altura (género F)\
-            \nI- Imprimir nombre de los personajes con mayor y menor altura de cada genero\
-            \nJ- Determinar la cantidad de personajes para cada tipo de color de ojo\
-            \nK- Determinar la cantidad de personajes para cada tipo de color de pelo\
-            \nL- Determinar la cantidad de personajes para cada tipo de inteligencia\
-            \nM- Imprimir personajes ordenados por tipo de color de ojo\
-            \nN- Imprimir personajes ordenados por tipo de color de pelo\
-            \nO- Imprimir personajes ordenados por tipo de inteligencia\
-            \nZ- Salir"
-
-    imprimir_dato(menu_desafio)
-
-
-# Punto 1.2
-def stark_menu_principal_cinco() -> str:
-    '''
-    Llama a la funcion imprimir_menu y pide al usuario ingresar
-    una letra.
-
-    Retorna:
-    La letra ingresada
-    -1 Si se ingresa algo distinto de una letra
-    '''
-    imprimir_menu_desafio_cinco()
-    opcion_elegida = input("> ")
-    if re.search("^[a-oA-OzZ]$", opcion_elegida) != None:
-        opcion_elegida = opcion_elegida.upper()
-        valor_retorno = opcion_elegida
-
-    else:
-        valor_retorno = -1
-
-    return valor_retorno
-
-
-# Punto 1.3
-def stark_marvel_app_cinco(personajes):
-    '''
-    Parametros:
-    Una lista de diccionarios con los datos de los personajes
-
-    Llama a la funcion stark_menu_principal.
-    En funcion de la opcion elegida, se llamaran a distintas funciones
-    '''
-    while True:
-        opcion_elegida = stark_menu_principal_cinco()
-
-        match (opcion_elegida):
-            case "A":
-                imprimir_dato("Eligio A")
-            case "B":
-                imprimir_dato("Eligio B")
-            case "C":
-                imprimir_dato("Eligio C")
-            case "D":
-                imprimir_dato("Eligio D")
-            case "E":
-                imprimir_dato("Eligio E")
-            case "F":
-                imprimir_dato("Eligio F")
-            case "G":
-                imprimir_dato("Eligio G")
-            case "H":
-                imprimir_dato("Eligio H")
-            case "I":
-                imprimir_dato("Eligio I")
-            case "J":
-                imprimir_dato("Eligio J")
-            case "K":
-                imprimir_dato("Eligio K")
-            case "L":
-                imprimir_dato("Eligio L")
-            case "M":
-                imprimir_dato("Eligio M")
-            case "N":
-                imprimir_dato("Eligio N")
-            case "O":
-                imprimir_dato("Eligio O")
-            case "Z":
-                imprimir_dato("Adios!")
-                break
-            case -1:
-                imprimir_dato("Ingrese una opción valida!")
-
     
 # Punto 1.4
 def leer_archivo(nombre_archivo: str) -> list:
@@ -364,7 +266,7 @@ def calcular_max_genero(personajes: list, dato: str, genero: str) -> dict:
 
 
 # Punto 3.3
-def calcular_max_min_dato_genero(personajes, calculo, dato, genero):
+def calcular_max_min_dato_genero(personajes, calculo, dato, genero) -> dict:
     '''
     Parametros:
     - Lista de diccionarios con datos de los personajes
@@ -386,7 +288,7 @@ def calcular_max_min_dato_genero(personajes, calculo, dato, genero):
 
 
 # Punto 3.4
-def stark_imprimir_guardar_max_min_genero(personajes: list, calculo: str, dato: str, genero: str):
+def stark_imprimir_guardar_max_min_genero(personajes: list, calculo: str, dato: str, genero: str) -> bool:
     '''
     Parametros:
     - Lista de diccionarios con datos de los personajes
@@ -425,7 +327,31 @@ def stark_imprimir_guardar_max_min_genero(personajes: list, calculo: str, dato: 
                 
     return archivo_guardado
     
+# Punto 3.4 Version Opcion I
+def stark_imprimir_guardar_max_y_min_ambos_generos(personajes: list, dato: str) -> bool:
+    '''
+    Similar a la funcion del punto 3.4, pero en este caso se imprimiran
+    los personajes mas bajos y mas altos de cada genero, se generara un string
+    representando a estos 4 personajes y se guardara esta informacion en un solo archivo
+    '''
+    archivo_guardado = False
+    if type(personajes) == type([]) and len(personajes) > 0 :
+        calculos = ["maximo", "maximo", "minimo", "minimo"]
+        generos = ["M", "F", "M", "F"]
+        palabras_calculos = ["Mayor", "Mayor", "Menor", "Menor"]
 
+        mensaje_max_min_ambos_generos = ""
+        for indice in range(4):
+            personaje = calcular_max_min_dato_genero(personajes, calculos[indice], dato, generos[indice])
+            nombre_y_dato= obtener_nombre_y_dato(personaje, dato)
+            mensaje_max_min_ambos_generos += "{0} {1} {2}: {3}\n".format(palabras_calculos[indice], dato, generos[indice], nombre_y_dato)
+
+        imprimir_dato(mensaje_max_min_ambos_generos)
+
+        nombre_archivo = "personajes_mayor_y_menor_{0}_M_F.csv".format(dato)
+        archivo_guardado = guardar_archivo(nombre_archivo, mensaje_max_min_ambos_generos)
+                
+    return archivo_guardado
 
 #-----------Cuarta parte-----------#
 
@@ -545,9 +471,366 @@ def stark_imprimir_guardar_promedio_altura_genero(personajes: list, genero: str)
             nombre_archivo = "personajes_promedio_altura_{0}.csv".format(genero)
             archivo_guardado = guardar_archivo(nombre_archivo, mensaje_promedio_altura)
         else:
-            imprimir_dato("Error al calcular el promedio de altura!")
+            imprimir_dato("Error al calcular el promedio de altura del genero pedido!")
     
     else:
         imprimir_dato("Error: Lista de personajes vacía!")
 
     return archivo_guardado
+
+
+
+#-----------Quinta parte-----------#
+
+# Punto 5.1
+def calcular_cantidad_tipo(personajes: list, dato: str) -> dict:
+    '''
+    Parametros:
+    - Lista de diccionarios con los datos de los personajes
+    - El dato del cual se informara la cantidad de personajes por tipo
+
+    Crea un diccionario vacio.
+    Verifica si la lista tiene al menos un elemento, en caso de que asi sea,
+    crea claves para el diccionario, dichas claves corresponden a los
+    diferentes tipos del dato pasado como parametro.
+    Luego recorre la lista de personajes incrementando el 
+    valor de la clave correspondiente
+
+    Retorna:
+    - Diccionario con claves que refieren a los tipos de dato y cuyo valor refiere
+      a la cantidad de personajes correspondientes a ese tipo
+    - Un diccionario con una clave; "Error" y un valor un string informando que la
+      lista esta vacia
+    
+    '''
+    diccionario_tipos_de_dato = {}
+    if type(personajes) == type([]) and len(personajes) > 0:
+        for personaje in personajes:
+            tipo = personaje[dato]
+            tipo = capitalizar_palabras(tipo)
+            if tipo == "":
+                tipo = "N/A"
+            diccionario_tipos_de_dato[tipo] = 0
+        
+        for personaje in personajes:
+            tipo = personaje[dato]
+            tipo = capitalizar_palabras(tipo)
+            if tipo == "":
+                tipo = "N/A"
+            diccionario_tipos_de_dato [tipo] += 1
+        
+        for tipo in diccionario_tipos_de_dato:
+            tipo = capitalizar_palabras(tipo)
+    else:
+        diccionario_tipos_de_dato["Error"] = "La lista se encuentra vacia"
+
+    return diccionario_tipos_de_dato
+
+
+# Punto 5.2
+def guardar_cantidad_personajes_tipo(tipos_de_dato: dict, dato: str) -> bool:
+    '''
+    Parametros:
+    - Un diccionario que tenga como claves los distintos tipos 
+      del dato pasado como parametro
+    - El dato del cual trata el diccionario
+
+    La funcion crea un string que representa cada tipo de dato
+    y su cantidad de personajes, para cada tipo se usa una linea.
+    Luego, guarda este string en un archivo.
+
+    Retorna:
+    - True en caso de que el archivo se guarde con exito
+    - False si hubo un error al guardar el archivo
+    '''
+    mensaje_cantidad_por_tipo = ""
+    for tipo in tipos_de_dato:
+        mensaje_cantidad_por_tipo += "Caracteristica: {0} {1} - Cantidad de personajes: {2}\n".format(dato, tipo, tipos_de_dato[tipo])
+
+    nombre_archivo = "personajes_cantidad_{0}.csv".format(dato)
+    archivo_guardado = guardar_archivo(nombre_archivo, mensaje_cantidad_por_tipo)
+
+    return archivo_guardado
+
+
+# Punto 5.3
+def stark_calcular_guardar_cantidad_por_tipo(personajes: list, dato: str) -> bool:
+    '''
+    Parametros:
+    - Una lista de diccionarios con los datos de los personajes
+    - El dato del cual se calculara la cantidad de personajes por tipo
+
+    Crea un diccionario que representa la cantidad de personajes por tipo 
+    del dato pasado como parametro. Luego crea un string con la informacion
+    de ese diccionario y lo guarda en un archivo.
+    En caso de error imprime un diccionario 'error'
+
+    Retorna:
+    - True si se guardo con exito el archivo
+    - False si hubo algun error
+    '''
+    archivo_guardado = False
+    cantidad_por_tipos = calcular_cantidad_tipo(personajes, dato)
+    if not ("Error" in cantidad_por_tipos.keys()):
+        archivo_guardado = guardar_cantidad_personajes_tipo(cantidad_por_tipos, dato)
+
+    else:
+        imprimir_dato(cantidad_por_tipos)
+
+    return archivo_guardado
+
+
+
+#-----------Sexta parte-----------#
+
+# Punto 6.1
+def obtener_lista_de_tipos(personajes: list, dato: str) -> set:
+    '''
+    Parametros:
+    - Una lista de diccionarios con los datos de los personajes
+    - El dato del cual se averiguara los distintos tipos
+
+    Crea una nueva lista, los elementos de la lista seran los distintos valores de
+    la clave pasada como parametro en los diccionarios, en caso de que el dato contenga
+    un valor vacio, se reemplazara por 'N/A', cada valor del diccionario se agrega
+    a la nueva lista. Al final, se castea la lista a un 'set'.
+
+    Retorna:
+    - La lista seteada
+    '''
+    lista_tipos = []
+    for personaje in personajes:
+        tipo = personaje[dato]
+        if tipo == "":
+            tipo = "N/A"
+
+        tipo = capitalizar_palabras(tipo)
+        lista_tipos.append(tipo)
+
+    lista_tipos = set(lista_tipos)
+    
+    return lista_tipos
+
+
+# Punto 6.2
+def normalizar_dato(valor_dato: str, valor_por_defecto: str) -> str:
+    '''
+    Parametros:
+    - String que representa el valor de una clave de un diccionarioo
+    - String que se usara en caso que el primero sea vacio
+
+    Retorna:
+    - El string valor_dato
+    - El string valor_por_defecto si valor_dato es vacio
+    '''
+    valor_dato = valor_dato.strip()
+    if len(valor_dato) > 0:
+        valor_retorno = valor_dato
+    else:
+        valor_retorno = valor_por_defecto
+
+    return valor_retorno
+
+
+# Punto 6.3
+def normalizar_personaje(personaje: dict, dato: str):
+    '''
+    Parametros:
+    - Un diccionario con datos de un personaje
+    - Una clave del diccionario que representa un dato del personaje
+
+    Funcion:
+    - Capitaliza las palabras del valor de la clave pasada como parametro
+    - En caso que el valor sea vacio, lo reemplaza por 'N/A'
+    - Capitaliza el nombre del personaje
+    '''
+    personaje[dato] = capitalizar_palabras(personaje[dato])
+    personaje[dato] = normalizar_dato(personaje[dato], "N/A")
+
+    personaje["nombre"] = capitalizar_palabras(personaje["nombre"])
+
+
+# Punto 6.4
+def obtener_personajes_por_tipo(personajes: list, lista_tipos: set, dato: str) -> dict:
+    '''
+    Parametros:
+    - Lista de diccionarios con datos de los personajes
+    - Una lista con los distintos tipos del dato pasado como parametro
+    - El dato por el cual se clasificaran los personajes
+
+    Funcion: 
+    - Crea un diccionario vacio, se le agregan claves en funcion de lista_tipos
+    - El valor de esas claves es una lista vacia
+    - Se recorre la lista de personajes, se agrega los personajes a la lista de la clave correspondiente
+
+    Retorna:
+    - El diccionario con las listas de personajes segun los distintos tipos
+    '''
+    
+    personajes_por_tipo = {}
+    for tipo in lista_tipos:
+        if not(tipo in personajes_por_tipo.keys()):
+            personajes_por_tipo[tipo] = []
+        
+        for personaje in personajes:
+            normalizar_personaje(personaje, dato)
+            if personaje[dato] == tipo:
+                personajes_por_tipo[tipo].append(personaje["nombre"])
+
+    return personajes_por_tipo
+
+
+# Punto 6.5
+def guardar_heroes_por_tipo(personajes_por_tipo: dict, dato: str) -> bool:
+    '''
+    Parametros:
+    - Un diccionario con los personajes ordenados por tipo
+    - El dato por el cual se clasificaran los personajes
+
+    Funcion:
+    - Recorre el diccionario concatenando strings, cada string representa un tipo
+    del dato pasado como parametro, seguido de los personajes correspondientes a ese tipo
+    - Luego de recorrer el diccionario, ya se tiene el string terminado y se lo guarda
+    en un archivo
+
+    Retorna:
+    - True si el archivo se guarda correctamente
+    - False si hubo un error al intentar guardar el archivo
+    '''
+    mensaje_personajes_tipo = ""
+    for tipo in personajes_por_tipo:
+        personajes = " | ".join(personajes_por_tipo[tipo])
+        mensaje_personajes_tipo += "Caracteristica {0} {1}: {2}\n".format(dato, tipo, personajes)
+
+    nombre_archivo = "personajes_segun_{0}.csv".format(dato)
+    archivo_guardado = guardar_archivo(nombre_archivo, mensaje_personajes_tipo)
+
+    return archivo_guardado
+        
+
+def stark_clasificar_guardar_personajes_por_dato(personajes: list, dato: str) -> bool:
+    '''
+    Parametros:
+    - Una lista de diccionarios con los datos de los personajes
+    - Un string que representa el dato por el cual se clasificara a los personajes
+
+    Funcion:
+    - Obtiene una lista con los distintos tipos del dato
+    - Obtiene un diccionario con claves correspondientes a los distintos tipos de dato
+    y su valor es la lista de los personajes pertenecientes a ese tipo
+    - Genera un string que representa la clasificacion generada y lo guarda en un archivo
+
+    Retorna:
+    - True si pudo guardar el archivo
+    - False caso contrario
+    '''
+    lista_de_tipos = obtener_lista_de_tipos(personajes, dato)
+    personajes_por_tipo = obtener_personajes_por_tipo(personajes, lista_de_tipos, dato)
+    archivo_guardado = guardar_heroes_por_tipo(personajes_por_tipo, dato)
+
+    return archivo_guardado
+
+
+
+
+#-----------Menu Principal-----------#
+
+# Punto 1.1
+def imprimir_menu_desafio_cinco():
+    '''
+    Imprime el menu de opciones
+    '''
+    menu_desafio = "Opciones:\
+            \nA- Imprimir y guardar nombres de los personajes (género M)\
+            \nB- Imprimir y guardar nombres de los personajes (género F)\
+            \nC- Imprimir y guardar el personaje mas alto (género M)\
+            \nD- Imprimir y guardar el personaje mas alto (género F)\
+            \nE- Imprimir y guardar el personaje mas bajo (género M)\
+            \nF- Imprimir y guardar el personaje mas bajo (género M)\
+            \nG- Imprimir y guardar el promedio de altura (género M)\
+            \nH- Imprimir y guardar el promedio de altura (género F)\
+            \nI- Imprimir y guardar los personajes con mayor y menor altura (género M y F)\
+            \nJ- Guardar la cantidad de personajes por cada tipo de color de ojo\
+            \nK- Guardar la cantidad de personajes por cada tipo de color de pelo\
+            \nL- Guardar la cantidad de personajes por cada tipo de inteligencia\
+            \nM- Guardar personajes ordenados por cada tipo de color de ojo\
+            \nN- Guardar personajes ordenados por cada tipo de color de pelo\
+            \nO- Guardar personajes ordenados por cada tipo de inteligencia\
+            \nZ- Salir"
+
+    imprimir_dato(menu_desafio)
+
+
+# Punto 1.2
+def stark_menu_principal_cinco() -> str:
+    '''
+    Llama a la funcion imprimir_menu y pide al usuario ingresar
+    una letra.
+
+    Retorna:
+    La letra ingresada
+    -1 Si se ingresa algo distinto de una letra
+    '''
+    imprimir_menu_desafio_cinco()
+    opcion_elegida = input("> ")
+    if re.search("^[a-oA-OzZ]$", opcion_elegida) != None:
+        opcion_elegida = opcion_elegida.upper()
+        valor_retorno = opcion_elegida
+
+    else:
+        valor_retorno = -1
+
+    return valor_retorno
+
+
+# Punto 1.3
+def stark_marvel_app_cinco(personajes):
+    '''
+    Parametros:
+    Una lista de diccionarios con los datos de los personajes
+
+    Llama a la funcion stark_menu_principal.
+    En funcion de la opcion elegida, se llamaran a distintas funciones
+    '''
+    while True:
+        opcion_elegida = stark_menu_principal_cinco()
+
+        match (opcion_elegida):
+            case "A":
+                stark_imprimir_guardar_personajes_genero(personajes, "M")
+            case "B":
+                stark_imprimir_guardar_personajes_genero(personajes, "F")
+            case "C":
+                stark_imprimir_guardar_max_min_genero(personajes, "maximo", "altura", "M")
+            case "D":
+                stark_imprimir_guardar_max_min_genero(personajes, "maximo", "altura", "F")
+            case "E":
+                stark_imprimir_guardar_max_min_genero(personajes, "minimo", "altura", "M")
+            case "F":
+                stark_imprimir_guardar_max_min_genero(personajes, "minimo", "altura", "F")
+            case "G":
+                stark_imprimir_guardar_promedio_altura_genero(personajes, "M")
+            case "H":
+                stark_imprimir_guardar_promedio_altura_genero(personajes, "F")
+            case "I":
+                stark_imprimir_guardar_max_y_min_ambos_generos(personajes, "altura")
+            case "J":
+                stark_calcular_guardar_cantidad_por_tipo(personajes, "color_ojos")
+            case "K":
+                stark_calcular_guardar_cantidad_por_tipo(personajes, "color_pelo")
+            case "L":
+                stark_calcular_guardar_cantidad_por_tipo(personajes, "inteligencia")
+            case "M":
+                stark_clasificar_guardar_personajes_por_dato(personajes, "color_ojos")
+            case "N":
+                stark_clasificar_guardar_personajes_por_dato(personajes, "color_pelo")
+            case "O":
+                stark_clasificar_guardar_personajes_por_dato(personajes, "inteligencia")
+            case "Z":
+                imprimir_dato("Adios!")
+                break
+            case -1:
+                imprimir_dato("Ingrese una opción valida!")
+
+
+stark_marvel_app_cinco(lista_personajes)
