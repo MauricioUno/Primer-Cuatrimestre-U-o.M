@@ -1,6 +1,40 @@
 import json
 import re
 
+# Punto 1.4 sin la biblioteca json
+def leer_archivo_manual(nombre_archivo: str) -> list:
+
+    with open(nombre_archivo, 'r') as archivo:
+        texto_archivo = archivo.read()
+
+    lista_nombres = re.findall('"nombre": "([a-z A-Z-]*)"', texto_archivo)
+    lista_identidad = re.findall('"identidad": "([a-z A-Z()]*)"', texto_archivo)
+    lista_empresa = re.findall('"empresa": "([a-z A-Z]*)"', texto_archivo)
+    lista_altura = re.findall('"altura": "([0-9]+\.?[0-9]*)?"', texto_archivo)
+    lista_peso = re.findall('"peso": "([0-9]+\.?[0-9]*)?"', texto_archivo)
+    lista_genero = re.findall('"genero": "(M|F|NB)?"', texto_archivo)
+    lista_color_ojos = re.findall('"color_ojos": "([a-z A-Z()]*)"', texto_archivo)
+    lista_color_pelo = re.findall('"color_pelo": "([a-z A-Z/]*)"', texto_archivo)
+    lista_fuerza = re.findall('"fuerza": "([0-9]*)"', texto_archivo)
+    lista_inteligencia = re.findall('"inteligencia": "([a-z A-Z]*)"', texto_archivo)
+
+    lista_personajes = []
+    for indice in range (24):
+        personaje = {}
+        personaje["nombre"] = lista_nombres[indice]
+        personaje["identidad"] = lista_identidad[indice]
+        personaje["empresa"] = lista_empresa[indice]
+        personaje["altura"] = lista_altura[indice]
+        personaje["peso"] = lista_peso[indice]
+        personaje["genero"] = lista_genero[indice]
+        personaje["color_ojos"] = lista_color_ojos[indice]
+        personaje["color_pelo"] = lista_color_pelo[indice]
+        personaje["fuerza"] = lista_fuerza[indice]
+        personaje["inteligencia"] = lista_inteligencia[indice]
+        lista_personajes.append(personaje)
+
+
+    return lista_personajes
 
 #-----------Primera parte-----------#
 
@@ -133,7 +167,10 @@ def leer_archivo(nombre_archivo: str) -> list:
     return lista
 
 lista_personajes = leer_archivo('Programa 10\data_stark.json')
-
+for datos_personaje in lista_personajes:
+    datos_personaje["altura"] = float(datos_personaje["altura"])
+    datos_personaje["peso"] = float (datos_personaje["peso"])
+    datos_personaje["fuerza"] = int (datos_personaje["fuerza"])
 
 # Punto 1.5
 def guardar_archivo(nombre_archivo: str, datos_a_guardar: str) -> bool:
@@ -154,7 +191,7 @@ def guardar_archivo(nombre_archivo: str, datos_a_guardar: str) -> bool:
                 imprimir_dato("No se guardaron los datos correctamente")
                 valor_retorno = False
     else:
-        imprimir_dato("El tipo de archivo no es valido!")
+        imprimir_dato("El tipo de archivo no es valido")
         valor_retorno = False
 
     return valor_retorno
@@ -222,3 +259,297 @@ def obtener_nombre_y_dato(personaje: dict, dato: str) -> str:
 #-----------Segunda parte-----------#
 
 # Punto 2.1
+def es_genero(personaje:dict, genero: str) -> bool:
+    '''
+    Parametros:
+    - Un diccionario que contiene los datos de un personaje
+    - Un string que representa el genero buscado, puede ser M, F o NB
+
+    Retorna:
+    - True en caso que el genero pasado como parametro este entre las 3 opciones
+        y coincida con el genero del personaje
+    - False en caso contrario
+    '''
+    genero = genero.upper()
+    if re.search("^(M|F|NB){1}$", genero) != None and personaje["genero"] == genero:
+        validacion_genero = True
+    else:
+        validacion_genero = False
+    
+    return validacion_genero
+
+
+# Punto 2.2
+def stark_guardar_heroe_genero(personajes: list, genero_evaluar: str):
+    '''
+    Parametros:
+    - Una lista de diccionarios con los datos de los personajes
+    - El genero que se buscara en los personajes de la lista
+
+    La funcion imprime los nombres de los personajes que sean del genero
+    pasado como parametro, y despues guarda esos nombres en un archivo
+
+    Retorna:
+    - True si todo el proceso se dio sin errores
+    - False si hubo un error
+    '''
+    archivo_guardado = False
+    if re.search("^(M|F|NB){1}$", genero_evaluar) != None:
+        lista_nombres = []
+        for personaje in personajes:
+            personaje_genero_elegido = es_genero(personaje, genero_evaluar)
+
+            if personaje_genero_elegido:
+                nombre_personaje = obtener_nombre_capitalizado(personaje)
+                imprimir_dato(nombre_personaje)
+                lista_nombres.append(nombre_personaje)
+        
+        if len(lista_nombres) > 0:
+            mensaje_nombres = ",".join(lista_nombres)
+            nombre_archivo = "personajes_{0}.csv".format(genero_evaluar)
+            archivo_guardado = guardar_archivo(nombre_archivo, mensaje_nombres)
+
+    return archivo_guardado
+
+
+
+#-----------Tercera parte-----------#
+
+# Punto 3.1
+def calcular_min_genero(personajes: list, dato: str, genero: str) -> dict:
+    '''
+    Parametros:
+    - Lista de diccionarios con datos del personaje correspondiente
+    - String 'dato', se buscara el personaje con el menor valor de esta clave
+    - String 'genero' determina dentro de que genero es la busqueda del menor valor
+
+    Determina que personaje tiene el menor valor del dato pasado como
+    parametro
+
+    Retorna:
+    - El diccionario del personaje con el dato de menor valor
+    '''
+    flag_primer_personaje = True
+    for personaje in personajes:
+        if personaje["genero"] == genero:
+            if flag_primer_personaje or personaje[dato] < personaje_min[dato]:
+                personaje_min = personaje
+                flag_primer_personaje = False
+
+    return personaje_min
+
+
+# Punto 3.2
+def calcular_max_genero(personajes: list, dato: str, genero: str) -> dict: 
+    '''
+    Parametros:
+    - Lista de diccionarios con datos del personaje correspondiente
+    - String 'dato', se buscara el personaje con el mayor valor de esta clave
+    - String 'genero' determina dentro de que genero es la busqueda del mayor valor
+
+    Determina que personaje tiene el mayor valor del dato pasado como
+    parametro
+
+    Retorna:
+    - El diccionario del personaje con el dato de mayor valor
+    '''
+    flag_primer_personaje = True
+    for personaje in personajes:
+        if personaje["genero"] == genero:
+            if flag_primer_personaje or personaje[dato] > personaje_max[dato]:
+                personaje_max = personaje
+                flag_primer_personaje = False
+
+    return personaje_max
+
+
+# Punto 3.3
+def calcular_max_min_dato_genero(personajes, calculo, dato, genero):
+    '''
+    Parametros:
+    - Lista de diccionarios con datos de los personajes
+    - calculo: string que indica el tipo de calculo a realizar ('maximo' o 'minimo')
+    - dato: string que hace referencia sobre que dato se realizara el calculo
+    - genero: string que determina sobre que genero se realizara la busqueda del valor
+
+    Calculara el maximo o minimo del dato pasado como parametro
+
+    Retorna:
+    - El diccionario con los datos del personaje que tiene el valor pedido
+    '''
+    if calculo == "maximo":
+        personaje_max_min = calcular_max_genero(personajes, dato, genero)
+    elif calculo == "minimo":
+        personaje_max_min = calcular_min_genero(personajes, dato, genero)
+
+    return personaje_max_min
+
+
+# Punto 3.4
+def stark_calcular_imprimir_heroe(personajes: list, calculo: str, dato: str, genero: str):
+    '''
+    Parametros:
+    - Lista de diccionarios con datos de los personajes
+    - calculo: string que indica el tipo de calculo a realizar ('maximo' o 'minimo')
+    - dato: string que hace referencia sobre que dato se realizara el calculo
+    - genero: string que determina sobre que genero se realizara la busqueda del valor
+
+    Verifica que sea una lista con almenos un elemento, que el genero ingresado 
+    sea 'M' o 'F' y que el calculo ingresado sea 'minimo' o 'maximo'.
+    En caso de pasar todas las validaciones, imprime un mensaje en funcion de los
+    datos pasados como parametro. Ademas, guarda ese mensaje en un archivo.
+
+    Retorna:
+    True en caso que el archivo se guarde con exito.
+    False en caso de error
+    '''
+    archivo_guardado = False
+    if type(personajes) == type([]) and len(personajes) > 0 : 
+        if re.search("^[MF]$", genero) != None:
+            if re.search("^(maximo|minimo)$", calculo) != None:
+
+                personaje_max_min = calcular_max_min_dato_genero(personajes, calculo, dato, genero)
+                nombre_y_dato_max_min = obtener_nombre_y_dato(personaje_max_min, dato)
+
+                if calculo == "maximo":
+                    palabra_calculo = "Mayor"
+                    
+                elif calculo == "minimo":
+                    palabra_calculo = "Menor"
+
+                mensaje_max_min = "{0} {1}: {2}".format(palabra_calculo, dato, nombre_y_dato_max_min)
+                imprimir_dato(mensaje_max_min)
+
+                nombre_archivo = "personajes_{0}_{1}_{2}.csv".format(calculo, dato, genero)
+                archivo_guardado = guardar_archivo(nombre_archivo, mensaje_max_min)
+                
+    return archivo_guardado
+    
+
+
+#-----------Cuarta parte-----------#
+
+# Punto 4.1
+def sumar_dato_personaje_genero(personajes: list, dato: str, genero: str) -> float:
+    '''
+    Parametros:
+    - Lista de diccionarios con los datos de los personajes
+    - String 'dato'; hace referencia al dato con el que se realiza la suma
+    - String 'genero'; determina sobre que genero se realiza la suma 
+
+    Se inicializa un acumulador al que se le suma el valor del dato pasado
+    como parametro, solo suma a los personajes que sean del genero pasado
+    como parametro 
+
+    Retorna:
+    - El acumulador de los valores del dato pasado como parametro
+    - -1 Si no se pasan todas las validaciones
+    '''
+    acumulador_suma_datos = 0
+    for personaje in personajes:
+        if type(personaje) == type({}) and personaje != {}:
+            if personaje["genero"] == genero:
+                acumulador_suma_datos += personaje[dato]
+        else:
+            acumulador_suma_datos = -1
+            break
+
+    return acumulador_suma_datos
+
+
+# Punto 4.2
+def cantidad_personajes_genero(personajes: list, genero: str) -> int:
+    '''
+    Parametros:
+    - Una lista de diccionarios con los datos de los personajes
+    - El genero del cual se buscara la cantidad de personajes
+
+    La funcion iterara la lista, sumara y obtendra la cantidad de personajes
+    del genero pasado como parametro
+
+    Retorna:
+    - Cantidad de personajes del genero correspondiente
+    '''
+
+    acumulador_personajes = 0
+    for personaje in personajes:
+        if personaje["genero"] == genero:
+            acumulador_personajes += 1
+
+    return acumulador_personajes
+
+# Funcion dividir
+def dividir(dividendo: float, divisor: int) -> float:
+    '''
+    Parametro:
+    Un dividendo y un divisor
+
+    Si el divisor no es cero, realizara la division
+
+    Retorna:
+    El resultado de la division
+    En caso de error imprime un mensaje
+    '''
+    if divisor != 0 and dividendo != -1:
+        resultado = dividendo / divisor
+    else:
+        resultado = 0
+    
+    return resultado
+
+
+# Punto 4.3
+def calcular_promedio_genero(personajes: list, dato: str, genero: str) -> float:
+    '''
+    Parametros:
+    - Lista de diccionarios con datos de los personajes
+    - String que hace referencia al dato del que se calculara el promedio
+    - El genero determina sobre que grupo de personajes se buscara el promedio
+
+    Calcula el promedio
+
+    Retorna:
+    El promedio
+    '''
+    acum_datos_genero = sumar_dato_personaje_genero(personajes, dato, genero)
+    cant_personajes_genero = cantidad_personajes_genero(personajes, genero)
+    promedio_datos = dividir(acum_datos_genero, cant_personajes_genero)
+
+    return promedio_datos
+
+
+# Punto 4.4
+def stark_calcular_imprimir_guardar_promedio_altura_genero(personajes: list, genero: str) -> bool:
+    '''
+    Parametros:
+    - Lista de diccionarios con datos del personaje correspondiente
+    - El genero determina sobre que grupo de personajes se buscara el promedio de altura
+    
+    Verifica que sea una lista por lo menos con 1 elemento
+    Obtiene el promedio de la altura de los personajes del genero 
+    elegido e imprime un mensaje, luego de eso guardara el mensaje
+    en un archivo.
+
+    Retorna:
+    - True si se guarda el archivo con exito
+    - False si ocurre un error, ademas imprime un mensaje
+    '''
+    archivo_guardado = False
+    if type (personajes) == type ([]) and len(personajes) > 0:
+        
+        promedio_altura_genero = calcular_promedio_genero(personajes, "altura", genero)
+        if promedio_altura_genero != 0:
+            mensaje_promedio_altura = "Altura promedio genero {0}: {1:.2f}".format(genero, promedio_altura_genero)
+            imprimir_dato(mensaje_promedio_altura)
+
+            nombre_archivo = "personajes_promedio_altura_{0}.csv".format(genero)
+            archivo_guardado = guardar_archivo(nombre_archivo, mensaje_promedio_altura)
+        else:
+            imprimir_dato("Error al calcular el promedio de altura!")
+    
+    else:
+        imprimir_dato("Error: Lista de personajes vacía!")
+
+    return archivo_guardado
+
+

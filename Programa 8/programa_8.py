@@ -284,7 +284,7 @@ def stark_imprimir_promedio_altura(lista: list):
     Parametros:
     Lista de diccionarios con datos del personaje correspondiente
     
-    Verifica que sea una lista por lo menos con 1 elemento y el calculo sea 'maximo' o 'minimo'
+    Verifica que sea una lista por lo menos con 1 elemento
     Obtiene el promedio de la altura de los personajes e imprime un mensaje
 
     Retorna:
