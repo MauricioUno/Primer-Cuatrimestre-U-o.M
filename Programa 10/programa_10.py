@@ -280,7 +280,7 @@ def es_genero(personaje:dict, genero: str) -> bool:
 
 
 # Punto 2.2
-def stark_guardar_heroe_genero(personajes: list, genero_evaluar: str):
+def stark_imprimir_guardar_personajes_genero(personajes: list, genero_evaluar: str):
     '''
     Parametros:
     - Una lista de diccionarios con los datos de los personajes
@@ -386,7 +386,7 @@ def calcular_max_min_dato_genero(personajes, calculo, dato, genero):
 
 
 # Punto 3.4
-def stark_calcular_imprimir_heroe(personajes: list, calculo: str, dato: str, genero: str):
+def stark_imprimir_guardar_max_min_genero(personajes: list, calculo: str, dato: str, genero: str):
     '''
     Parametros:
     - Lista de diccionarios con datos de los personajes
@@ -519,7 +519,7 @@ def calcular_promedio_genero(personajes: list, dato: str, genero: str) -> float:
 
 
 # Punto 4.4
-def stark_calcular_imprimir_guardar_promedio_altura_genero(personajes: list, genero: str) -> bool:
+def stark_imprimir_guardar_promedio_altura_genero(personajes: list, genero: str) -> bool:
     '''
     Parametros:
     - Lista de diccionarios con datos del personaje correspondiente
@@ -551,5 +551,3 @@ def stark_calcular_imprimir_guardar_promedio_altura_genero(personajes: list, gen
         imprimir_dato("Error: Lista de personajes vacía!")
 
     return archivo_guardado
-
-
