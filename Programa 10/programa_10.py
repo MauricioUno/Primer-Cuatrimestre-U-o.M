@@ -1,3 +1,4 @@
+# Uño Mauricio Ejercicio 10
 import json
 import re
 
@@ -85,18 +86,17 @@ def guardar_archivo(nombre_archivo: str, datos_a_guardar: str) -> bool:
     True en caso de que se haya guardado con exito
     False en caso de error (Tambien imprimira un mensaje informando del error)
     '''
-    valor_retorno = True
+    archivo_guardado = False
     if re.search("(.json|.csv)$", nombre_archivo) != None:
         with open(nombre_archivo, 'w') as archivo:
             datos_guardados = archivo.write(datos_a_guardar)
-            if datos_guardados != len(datos_a_guardar):
-                imprimir_dato("No se guardaron los datos correctamente")
-                valor_retorno = False
+            if datos_guardados == len(datos_a_guardar):
+                imprimir_dato("Informacion guardada en un archivo")
+                archivo_guardado = True
     else:
         imprimir_dato("El tipo de archivo no es valido")
-        valor_retorno = False
 
-    return valor_retorno
+    return archivo_guardado
 
 
 # Punto 1.6
@@ -172,8 +172,7 @@ def es_genero(personaje:dict, genero: str) -> bool:
         y coincida con el genero del personaje
     - False en caso contrario
     '''
-    genero = genero.upper()
-    if re.search("^(M|F|NB){1}$", genero) != None and personaje["genero"] == genero:
+    if personaje["genero"] == genero:
         validacion_genero = True
     else:
         validacion_genero = False
@@ -196,7 +195,7 @@ def stark_imprimir_guardar_personajes_genero(personajes: list, genero_evaluar: s
     - False si hubo un error
     '''
     archivo_guardado = False
-    if re.search("^(M|F|NB){1}$", genero_evaluar) != None:
+    if re.search("^[MF]$", genero_evaluar) != None:
         lista_nombres = []
         for personaje in personajes:
             personaje_genero_elegido = es_genero(personaje, genero_evaluar)
@@ -210,6 +209,8 @@ def stark_imprimir_guardar_personajes_genero(personajes: list, genero_evaluar: s
             mensaje_nombres = ",".join(lista_nombres)
             nombre_archivo = "personajes_{0}.csv".format(genero_evaluar)
             archivo_guardado = guardar_archivo(nombre_archivo, mensaje_nombres)
+        else:
+            imprimir_dato("No hay personajes del genero pasado como parametro")
 
     return archivo_guardado
 
@@ -327,32 +328,6 @@ def stark_imprimir_guardar_max_min_genero(personajes: list, calculo: str, dato: 
                 
     return archivo_guardado
     
-# Punto 3.4 Version Opcion I
-def stark_imprimir_guardar_max_y_min_ambos_generos(personajes: list, dato: str) -> bool:
-    '''
-    Similar a la funcion del punto 3.4, pero en este caso se imprimiran
-    los personajes mas bajos y mas altos de cada genero, se generara un string
-    representando a estos 4 personajes y se guardara esta informacion en un solo archivo
-    '''
-    archivo_guardado = False
-    if type(personajes) == type([]) and len(personajes) > 0 :
-        calculos = ["maximo", "maximo", "minimo", "minimo"]
-        generos = ["M", "F", "M", "F"]
-        palabras_calculos = ["Mayor", "Mayor", "Menor", "Menor"]
-
-        mensaje_max_min_ambos_generos = ""
-        for indice in range(4):
-            personaje = calcular_max_min_dato_genero(personajes, calculos[indice], dato, generos[indice])
-            nombre_y_dato= obtener_nombre_y_dato(personaje, dato)
-            mensaje_max_min_ambos_generos += "{0} {1} {2}: {3}\n".format(palabras_calculos[indice], dato, generos[indice], nombre_y_dato)
-
-        imprimir_dato(mensaje_max_min_ambos_generos)
-
-        nombre_archivo = "personajes_mayor_y_menor_{0}_M_F.csv".format(dato)
-        archivo_guardado = guardar_archivo(nombre_archivo, mensaje_max_min_ambos_generos)
-                
-    return archivo_guardado
-
 #-----------Cuarta parte-----------#
 
 # Punto 4.1
@@ -708,6 +683,7 @@ def guardar_heroes_por_tipo(personajes_por_tipo: dict, dato: str) -> bool:
     return archivo_guardado
         
 
+# Punto 6.6
 def stark_clasificar_guardar_personajes_por_dato(personajes: list, dato: str) -> bool:
     '''
     Parametros:
@@ -813,7 +789,7 @@ def stark_marvel_app_cinco(personajes):
             case "H":
                 stark_imprimir_guardar_promedio_altura_genero(personajes, "F")
             case "I":
-                stark_imprimir_guardar_max_y_min_ambos_generos(personajes, "altura")
+                imprimir_dato("La funcion para esta opcion aun no fue implementada, perdon!")
             case "J":
                 stark_calcular_guardar_cantidad_por_tipo(personajes, "color_ojos")
             case "K":
