@@ -15,23 +15,24 @@ def importar_lista(direccion: str):
 
     return diccionario["heroes"]
 
-#-------- Validar lo ingresado por el usuario --------#
+#-------- Validar con expresion regular --------#
 def validar_string(opcion: str, reg_ex_opciones: str):
     '''
     Parametros: 
-    - Un string que corresponde a una de las opciones
-    - La expresion regular de las opciones
+    - Un string que corresponde a algo ingresado por el usuario
+    - La expresion regular de lo que considerado valido 
 
-    Verifica que el string corresponda a una de las opciones
+    Elimina los espacios vacios del string y verifica que 
+    corresponda a la expresion regular, 
 
     Retorna:
-    - True en caso que sea igual
-    - -1 si no es igual
+    - El string ingresado pasado a minusculas
+    - -1 Si no corresponde a la regEx
     '''
     opcion = opcion.strip()
     valor_retorno = -1
     if re.search(reg_ex_opciones, opcion, re.IGNORECASE):
-        valor_retorno = opcion
+        valor_retorno = opcion.lower()
 
     return valor_retorno
 
@@ -40,13 +41,13 @@ def dato_ingresado(texto_input: str, dato_buscado: str) -> str:
     '''
     Parametros:
     - El texto informando al usuario que debe ingresar
-    - La expresion regular correspondiente al dato que estamos buscando
+    - La expresion regular correspondiente a las opciones permitidas
 
-    Se pide al usuario que ingrese una opcion, el texto ingresado sera validado
+    Se pide al usuario que ingrese algo, el texto ingresado sera validado
     en funcion de la expresion regular pasada como parametro
 
     Retorna:
-    - El string validado si lo ingresado esta dentro de la expreison regular
+    - El string validado si lo ingresado esta dentro de la expresion regular
     - -1 en caso que no sea lo pedido
     '''
     string_ingresado = input (texto_input)
@@ -69,7 +70,7 @@ def imprimir_nombres(personajes: list):
         print(mensaje)
 
 
-def imprimir_nombres_dato(personajes: list, dato: str):
+def imprimir_nombres_y_dato(personajes: list, dato: str):
     '''
     Parametros:
     - Una lista de diccionarios con datos de los personajes
@@ -105,7 +106,7 @@ def validar_rango(numero: int, personajes: list) -> bool:
     return numero_valido
 
 
-def listar_cantidad_personajes(personajes: list, cantidad: int) -> list:
+def crear_lista_cantidad_personajes(personajes: list, cantidad: int) -> list:
     '''
     Parametros:
     - La lista de diccionarios con datos de los personajes
@@ -116,11 +117,11 @@ def listar_cantidad_personajes(personajes: list, cantidad: int) -> list:
     Retorna:
     - La nueva lista
     '''
-    lista_recibida = personajes[:cantidad]
+    lista_recibida = personajes[:cantidad].copy()
     return lista_recibida
 
 
-def imprimir_cantidad_personajes(personajes: list) -> list:
+def guardar_imprimir_cantidad_personajes(personajes: list) -> list:
     '''
     Parametros:
     - La lista de diccionarios con datos de los personajes
@@ -131,7 +132,7 @@ def imprimir_cantidad_personajes(personajes: list) -> list:
     - Se verifica que la cantidad no supere el largo de la lista
     pasada como parametro
     - Creara una lista nueva con la cantidad de personajes ingresada por el usuario.
-    - Imprime los nombres en consola
+    - Imprime los nombres de los personajes de la nueva lista
 
     Retorna:
     - La nueva lista generada
@@ -142,7 +143,7 @@ def imprimir_cantidad_personajes(personajes: list) -> list:
     cantidad = int(dato_ingresado("Ingrese la cantidad de personajes a listar: ", "^[0-9]+$"))
 
     if validar_rango(cantidad, copia_personajes):
-        lista_generada = listar_cantidad_personajes(copia_personajes, cantidad)
+        lista_generada = crear_lista_cantidad_personajes(copia_personajes, cantidad)
 
         print("Lista con {0} personaje(s): ".format(cantidad))
         imprimir_nombres(lista_generada)
@@ -167,11 +168,12 @@ def buscar_max_min(personajes: list, calculo: str, dato: str) -> int:
     Retorna:
     - La posicion correspondiente 
     '''
+    copia_personajes = personajes.copy()
     indice_min_max = 0
-    for indice in range(len(personajes)):
-        if (calculo == "asc" and personajes[indice][dato] < personajes[indice_min_max][dato]):
+    for indice in range(len(copia_personajes)):
+        if (calculo == "asc" and copia_personajes[indice][dato] < copia_personajes[indice_min_max][dato]):
             indice_min_max = indice
-        elif (calculo == "desc" and personajes[indice][dato] > personajes[indice_min_max][dato]):
+        elif (calculo == "desc" and copia_personajes[indice][dato] > copia_personajes[indice_min_max][dato]):
             indice_min_max = indice
 
     return indice_min_max
@@ -189,14 +191,15 @@ def ordenar_y_listar_segun_dato(personajes: list, tipo_de_ordenamiento: str, dat
     Retorna:
     - La lista ordenada
     '''
-    for indice in range(len(personajes)-1):
-        indice_min_max = buscar_max_min(personajes[indice:], tipo_de_ordenamiento, dato) + indice
-        personajes[indice], personajes[indice_min_max] = personajes[indice_min_max], personajes[indice]
+    copia_personajes = personajes.copy()
+    for indice in range(len(copia_personajes)-1):
+        indice_min_max = buscar_max_min(copia_personajes[indice:], tipo_de_ordenamiento, dato) + indice
+        copia_personajes[indice], copia_personajes[indice_min_max] = copia_personajes[indice_min_max], copia_personajes[indice]
 
-    return personajes
+    return copia_personajes
 
 
-def imprimir_personajes_ordenados(personajes: list, dato: str) -> list:
+def guardar_imprimir_personajes_ordenados(personajes: list, dato: str) -> list:
     '''
     Parametros:
     - La lista de diccionarios con datos de los personajes
@@ -206,7 +209,8 @@ def imprimir_personajes_ordenados(personajes: list, dato: str) -> list:
     - Se pide al usuario de que manera desea ordenar la lista
     - Ordena la lista de manera ascendente o descendente segun 
     la opcion ingresada y el dato pasado como parametro
-    - Imprime en consola los personajes ordenados junto al valor del dato
+    - Imprime en consola los nombres de los personajes de la nueva lista
+    junto al valor del dato correspondiente
 
     Retorna:
     - Una nueva lista ordenada
@@ -217,7 +221,7 @@ def imprimir_personajes_ordenados(personajes: list, dato: str) -> list:
     ordenar = dato_ingresado("Ingrese la manera de ordenar la lista (asc/desc): ", "^(asc|desc)$")
     if ordenar != -1:
         lista_generada = ordenar_y_listar_segun_dato(copia_personajes, ordenar, dato)
-        imprimir_nombres_dato(lista_generada, dato)           
+        imprimir_nombres_y_dato(lista_generada, dato)           
     else:
         print("Error!, tipo de orden no valido!")
 
@@ -238,15 +242,16 @@ def calcular_promedio(personajes: list, dato: str) -> float:
     Retorna:
     - El promedio del dato pasado como parametro
     '''
+    copia_personajes = personajes.copy()
     acumulador_datos = 0
-    for personaje in personajes:
+    for personaje in copia_personajes:
         acumulador_datos += personaje[dato]
 
-    promedio = acumulador_datos / len(personajes)
+    promedio = acumulador_datos / len(copia_personajes)
     return promedio
 
 
-def lista_ordenados_segun_el_promedio(personajes: list, dato: str, orden: str)-> list:
+def crear_lista_segun_el_promedio(personajes: list, dato: str, orden: str)-> list:
     '''
     Parametros:
     - Una lista de diccionarios con los datos de los personajes
@@ -257,21 +262,22 @@ def lista_ordenados_segun_el_promedio(personajes: list, dato: str, orden: str)->
 
     Se crea una lista, se recorre la lista pasada como parametro y agrega
     a la nueva lista los personajes con valores mayor o menor al promedio, segun 
-    corresponda
+    haya ingresado el usuario
 
     Retorna:
-    - La nueva lista
+    - La nueva lista 
     '''
+    copia_personajes = personajes.copy()
     lista_ordenada = []
-    promedio_dato = calcular_promedio(personajes, dato)
-    for personaje in personajes:
+    promedio_dato = calcular_promedio(copia_personajes, dato)
+    for personaje in copia_personajes:
         if (orden == "mayor" and personaje[dato] > promedio_dato) or (orden == "menor" and personaje[dato] < promedio_dato):
             lista_ordenada.append(personaje)
 
     return lista_ordenada
 
 
-def imprimir_personajes_por_promedio(personajes: list) -> list:
+def guardar_imprimir_personajes_segun_el_promedio(personajes: list) -> list:
     '''
     Parametros:
     - La lista de diccionarios con datos de los personajes
@@ -282,6 +288,8 @@ def imprimir_personajes_por_promedio(personajes: list) -> list:
     respecto del promedio
     - Se crea una nueva lista que incluye a los personajes que sean mayor o menor al promedio
     del dato pasado como parametro, segun corresponda
+    - Se imprime los nombres de los personajes de la nueva lista junto con el valor
+    del dato correspondiente
 
     Retorna:
     - La nueva lista generada
@@ -294,8 +302,8 @@ def imprimir_personajes_por_promedio(personajes: list) -> list:
     if clave != -1:
         orden = dato_ingresado("Ingrese si desea listar segun los mayores o menores al promedio(mayor/menor): ", "^(mayor|menor)$")
         if orden != -1:
-            lista_generada = lista_ordenados_segun_el_promedio(copia_personajes, clave, orden)
-            imprimir_nombres_dato(lista_generada, clave)
+            lista_generada = crear_lista_segun_el_promedio(copia_personajes, clave, orden)
+            imprimir_nombres_y_dato(lista_generada, clave)
         else:
             print("Error!, tipo de orden no valido!")
     else:
@@ -306,7 +314,7 @@ def imprimir_personajes_por_promedio(personajes: list) -> list:
 
 
 # -------- Punto Cinco-------- #
-def lista_por_tipo_de_inteligencia(personajes: list, inteligencia: str):
+def crear_lista_por_inteligencia(personajes: list, inteligencia: str):
     '''
     Parametros:
     - La lista de diccionarios con datos de los personajes
@@ -318,8 +326,9 @@ def lista_por_tipo_de_inteligencia(personajes: list, inteligencia: str):
     Retorna:
     - La nueva lista
     '''
+    copia_personajes = personajes.copy()
     lista_inteligencia = []
-    for personaje in personajes:
+    for personaje in copia_personajes:
         if (personaje["inteligencia"] == inteligencia):
             lista_inteligencia.append(personaje)
 
@@ -342,9 +351,9 @@ def imprimir_personajes_por_inteligencia(personajes: list):
     inteligencia = dato_ingresado("Ingrese la inteligencia por la que listara a los personajes(good/average/high): ",
                                   "^(good|average|high)$")
     if inteligencia != -1:
-        lista_generada = lista_por_tipo_de_inteligencia(copia_personajes, inteligencia)
+        lista_generada = crear_lista_por_inteligencia(copia_personajes, inteligencia)
 
-        print("Tipo de inteligencia '{0}': ".format(inteligencia))
+        print("Personajes con inteligencia '{0}': ".format(inteligencia))
         imprimir_nombres(lista_generada)
     else:
         print("Error!, inteligencia no valida")
@@ -352,10 +361,11 @@ def imprimir_personajes_por_inteligencia(personajes: list):
 
 
 # -------- Punto Seis-------- #
-def archivar_lista(personajes: list):
+def archivar_lista(personajes: list, path: str):
     '''
     Parametros:
     - Una lista de diccionarios con datos de los personajes
+    - La direccion y nombre del archivo
 
     Valida si es una lista con almenos un elemento
     La funcion guarda en un string una linea de texto por cada personaje, 
@@ -368,11 +378,11 @@ def archivar_lista(personajes: list):
         mensaje = ""
         for personaje in copia_personajes:
             for clave in personaje:
-                mensaje += "{0}: {1}, ".format(clave, personaje[clave])
-            mensaje = re.sub(", $", "", mensaje)
+                mensaje += "{0}: {1}; ".format(clave, personaje[clave])
+            mensaje = re.sub("; $", "", mensaje)
             mensaje += "\n" 
         
-        with open("Practica preparcial\lista_archivada.csv", "w") as archivo:
+        with open(path, "w") as archivo:
             archivo.write(mensaje)  
         print("Lista archivada")
     else:

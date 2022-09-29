@@ -19,22 +19,22 @@ def menu_principal():
         match opcion:
             
             case 1:
-                lista_generada = funciones.imprimir_cantidad_personajes(lista_personajes)
+                lista_generada = funciones.guardar_imprimir_cantidad_personajes(lista_personajes)
 
             case 2:
-                lista_generada = funciones.imprimir_personajes_ordenados(lista_personajes, "altura")
+                lista_generada = funciones.guardar_imprimir_personajes_ordenados(lista_personajes, "altura")
                 
             case 3:
-                lista_generada = funciones.imprimir_personajes_ordenados(lista_personajes, "fuerza")     
+                lista_generada = funciones.guardar_imprimir_personajes_ordenados(lista_personajes, "fuerza")     
 
             case 4:
-                lista_generada = funciones.imprimir_personajes_por_promedio(lista_personajes)    
+                lista_generada = funciones.guardar_imprimir_personajes_segun_el_promedio(lista_personajes)    
 
             case 5:
                 funciones.imprimir_personajes_por_inteligencia(lista_personajes)    
 
             case 6:
-                funciones.archivar_lista(lista_generada)
+                funciones.archivar_lista(lista_generada, "Practica preparcial\lista_archivada.csv")
 
             case 7:
                 print("Adios!")
