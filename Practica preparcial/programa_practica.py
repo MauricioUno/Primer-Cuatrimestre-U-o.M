@@ -13,13 +13,13 @@ def menu_principal():
                 \n7- Salir"
 
         print(menu)
-        opcion = input("Ingrese una de las opciones: ")
-        opcion = int (funciones.validar_string(opcion, "^[+-]?[0-9]+$"))
+        opcion = input(">> ")
+        opcion = int (funciones.validar_string(opcion, "^[0-9]+$"))
 
         match opcion:
             
             case 1:
-                lista_generada = funciones.imprimir_n_personajes(lista_personajes)
+                lista_generada = funciones.imprimir_cantidad_personajes(lista_personajes)
 
             case 2:
                 lista_generada = funciones.imprimir_personajes_ordenados(lista_personajes, "altura")
@@ -34,11 +34,7 @@ def menu_principal():
                 funciones.imprimir_personajes_por_inteligencia(lista_personajes)    
 
             case 6:
-                if type (lista_generada) == type([]) and len(lista_generada) > 0 :
-                    funciones.guardar_lista(lista_generada)
-                    
-                else:
-                    print("No hay una lista para guardar")
+                funciones.archivar_lista(lista_generada)
 
             case 7:
                 print("Adios!")
