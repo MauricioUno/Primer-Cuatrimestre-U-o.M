@@ -57,19 +57,6 @@ def dato_ingresado(texto_input: str, dato_buscado: str) -> str:
 
 
 #--------- Mostrar informacion de lista en consola ---------#
-def imprimir_nombres(personajes: list):
-    '''
-    Parametros:
-    - Una lista de diccionarios con datos de los personajes
-
-    Funcion:
-    - Imprime los nombres de los personajes dentro de la lista
-    '''
-    for personaje in personajes:
-        mensaje = "Nombre: {0}".format(personaje["nombre"])
-        print(mensaje)
-
-
 def imprimir_nombres_y_dato(personajes: list, dato: str):
     '''
     Parametros:
@@ -146,7 +133,7 @@ def guardar_imprimir_cantidad_personajes(personajes: list) -> list:
         lista_generada = crear_lista_cantidad_personajes(copia_personajes, cantidad)
 
         print("Lista con {0} personaje(s): ".format(cantidad))
-        imprimir_nombres(lista_generada)
+        imprimir_nombres_y_dato(lista_generada, "identidad")
     else:
         print("Error!, valor ingresado no valido!")
     
@@ -354,7 +341,7 @@ def imprimir_personajes_por_inteligencia(personajes: list):
         lista_generada = crear_lista_por_inteligencia(copia_personajes, inteligencia)
 
         print("Personajes con inteligencia '{0}': ".format(inteligencia))
-        imprimir_nombres(lista_generada)
+        imprimir_nombres_y_dato(lista_generada, "identidad")
     else:
         print("Error!, inteligencia no valida")
 
