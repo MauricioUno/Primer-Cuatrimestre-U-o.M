@@ -39,7 +39,7 @@ def validar_string(opcion: str, reg_ex_opciones: str):
     return valor_retorno
 
 
-def dato_ingresado(texto_input: str, dato_buscado: str) -> str:
+def ingresar_dato(texto_input: str, dato_buscado: str) -> str:
     '''
     Parametros:
     - El texto informando al usuario que debe ingresar
@@ -129,7 +129,7 @@ def guardar_imprimir_cantidad_personajes(personajes: list) -> list:
     '''
     copia_personajes = personajes.copy()
     lista_generada = []
-    cantidad = int(dato_ingresado("Ingrese la cantidad de personajes a listar: ", "^[0-9]+$"))
+    cantidad = int(ingresar_dato("Ingrese la cantidad de personajes a listar: ", "^[0-9]+$"))
 
     if validar_rango(cantidad, copia_personajes):
         lista_generada = crear_lista_cantidad_personajes(copia_personajes, cantidad)
@@ -207,7 +207,7 @@ def guardar_imprimir_personajes_ordenados(personajes: list, dato: str) -> list:
     '''
     copia_personajes = personajes.copy()
     lista_generada = []
-    ordenar = dato_ingresado("Ingrese la manera de ordenar la lista (asc/desc): ", "^(asc|desc)$")
+    ordenar = ingresar_dato("Ingrese la manera de ordenar la lista (asc/desc): ", "^(asc|desc)$")
     if ordenar != -1:
         lista_generada = ordenar_y_listar_segun_dato(copia_personajes, ordenar, dato)
         imprimir_nombres_y_dato(lista_generada, dato)           
@@ -287,9 +287,9 @@ def guardar_imprimir_personajes_segun_el_promedio(personajes: list) -> list:
     '''
     copia_personajes = personajes.copy()
     lista_generada = []
-    clave = dato_ingresado("Ingrese la clave numerica (altura/fuerza/peso): ", "^(altura|fuerza|peso)$")
+    clave = ingresar_dato("Ingrese la clave numerica (altura/fuerza/peso): ", "^(altura|fuerza|peso)$")
     if clave != -1:
-        orden = dato_ingresado("Ingrese si desea listar segun los mayores o menores al promedio(mayor/menor): ", "^(mayor|menor)$")
+        orden = ingresar_dato("Ingrese si desea listar segun los mayores o menores al promedio(mayor/menor): ", "^(mayor|menor)$")
         if orden != -1:
             lista_generada = crear_lista_segun_el_promedio(copia_personajes, clave, orden)
             imprimir_nombres_y_dato(lista_generada, clave)
@@ -337,7 +337,7 @@ def imprimir_personajes_por_inteligencia(personajes: list):
     - En caso de error imprime un mensaje distinto
     '''
     copia_personajes = personajes.copy()
-    inteligencia = dato_ingresado("Ingrese la inteligencia por la que listara a los personajes(good/average/high): ",
+    inteligencia = ingresar_dato("Ingrese la inteligencia por la que listara a los personajes(good/average/high): ",
                                   "^(good|average|high)$")
     if inteligencia != -1:
         lista_generada = crear_lista_por_inteligencia(copia_personajes, inteligencia)

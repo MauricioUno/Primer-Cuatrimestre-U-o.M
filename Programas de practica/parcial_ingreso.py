@@ -63,7 +63,7 @@ contador_ventas_memoria = 0
 
 
 while True:
-
+    print("\nCompra número {0}".format(contador_ventas+1))
     nombre_producto = ingresar_dato ("Ingrese el nombre del producto: ", "^[a-z A-Z]+$")
     while nombre_producto == -1:
         nombre_producto = ingresar_dato ("Error! Ingrese un nombre!: ", "^[a-z A-Z]+$")
@@ -109,14 +109,15 @@ while True:
 
     if (contador_ventas > 1):
         confirmacion = input ("Ingrese 'S' para dejar de cargar ventas: ")
-        if confirmacion == 'S':
+        if re.search("[sS]", confirmacion):
             break
     
 
 
 promedio_importe_por_venta = acumulador_importe / contador_ventas
 
-mensaje_datos_ventas = "El producto del importe mas caro es '{0}' con un precio de {1}".format(nombre_maximo, importe_maximo)
+mensaje_datos_ventas = "\nDatos de las ventas registradas: "
+mensaje_datos_ventas += "\nEl producto del importe mas caro es '{0}' con un precio de {1}".format(nombre_maximo, importe_maximo)
 mensaje_datos_ventas += "\nEl promedio de importe por venta es de {0:.2f}".format(promedio_importe_por_venta)
 
 if ventas_discos:
