@@ -12,6 +12,47 @@ B- De la venta más cara, el nombre del producto.
 C- El importe promedio del total.
 D- La cantidad de ventas que sean de “Memorias” y cuesten menos de $850.
 '''
+import re
+
+#-------- Validar con expresion regular --------#
+def validar_string(opcion: str, reg_ex_opciones: str):
+    '''
+    Parametros: 
+    - Un string que corresponde a algo ingresado por el usuario
+    - La expresion regular de lo que considerado valido 
+
+    Elimina los espacios vacios del string y verifica que 
+    corresponda a la expresion regular, 
+
+    Retorna:
+    - El string ingresado pasado a minusculas
+    - -1 Si no corresponde a la regEx
+    '''
+    opcion = opcion.strip()
+    valor_retorno = -1
+    if re.search(reg_ex_opciones, opcion, re.IGNORECASE):
+        valor_retorno = opcion.lower()
+
+    return valor_retorno
+
+
+def ingresar_dato(texto_input: str, dato_buscado: str) -> str:
+    '''
+    Parametros:
+    - El texto informando al usuario que debe ingresar
+    - La expresion regular correspondiente a las opciones permitidas
+
+    Se pide al usuario que ingrese algo, el texto ingresado sera validado
+    en funcion de la expresion regular pasada como parametro
+
+    Retorna:
+    - El string validado si lo ingresado esta dentro de la expresion regular
+    - -1 en caso que no sea lo pedido
+    '''
+    string_ingresado = input (texto_input)
+    string_ingresado = validar_string(string_ingresado, dato_buscado)
+
+    return string_ingresado
 
 
 
@@ -20,34 +61,28 @@ acumulador_importe = 0
 contador_ventas = 0
 contador_ventas_memoria = 0
 
+
 while True:
 
-    nombre_producto = input ("Ingrese el nombre del producto: ")
-    while nombre_producto.isnumeric():
-        nombre_producto = input ("Error! Ingrese un nombre!: ")
+    nombre_producto = ingresar_dato ("Ingrese el nombre del producto: ", "^[a-z A-Z]+$")
+    while nombre_producto == -1:
+        nombre_producto = ingresar_dato ("Error! Ingrese un nombre!: ", "^[a-z A-Z]+$")
 
 
-    genero_producto = input ("Ingrese el genero del producto (Memorias--Discos--Motherboards): ")
-    genero_producto = genero_producto.lower()
-    while (genero_producto != "memorias" and genero_producto != "discos" and genero_producto != "motherboards"):
-        genero_producto = input ("Error! Ingrese un genero! (Memorias--Discos--Motherboards): ")
-        genero_producto = genero_producto.lower()
+    genero_producto = ingresar_dato ("Ingrese el genero del producto (Memoria/Disco/Motherboard): ", "^(memoria|disco|motherboard)$")
+    while genero_producto == -1:
+        genero_producto = ingresar_dato ("Error! Ingrese un genero! (Memoria/Disco/Motherboard): ", "^(memoria|disco|motherboard)$")
 
 
-    tipo_de_venta = input ("Ingrese el tipo de venta (Online--Local): ")
-    tipo_de_venta = tipo_de_venta.lower()
-    while (tipo_de_venta != "online" and tipo_de_venta != "local"):
-        tipo_de_venta = input ("Error! Ingrese un tipo de venta! (Online--Local): ")
-        tipo_de_venta = tipo_de_venta.lower()
+    tipo_de_venta = ingresar_dato ("Ingrese el tipo de venta (Online/Local): ", "^(online|local)$")
+    while tipo_de_venta == -1:
+        tipo_de_venta = ingresar_dato ("Error! Ingrese un tipo de venta! (Online--Local): ", "^(online|local)$")
 
 
-    importe_producto = input ("Ingrese el importe de la venta (Maximo 30000): ")
-    if importe_producto.isdecimal():
-        importe_producto = int (importe_producto)
-    while(type(importe_producto) != int or importe_producto < 1 or importe_producto > 30000):
-        importe_producto = input ("Error! Ingrese un importe dentro del rango (Maximo 30000): ")
-        if importe_producto.isdecimal():
-            importe_producto = int (importe_producto)
+    importe_producto = float(ingresar_dato("Ingrese el importe de la venta (Maximo 30000): ", "^[0-9]+(\.[0-9]+)?$"))
+    while importe_producto < 1 or importe_producto > 30000:
+        importe_producto = float(ingresar_dato("Error! Ingrese un importe dentro del rango (Maximo 30000): ", "^[0-9]+(\.[0-9]+)?$"))
+        
 
     
     if contador_ventas == 0 or importe_producto > importe_maximo:
@@ -56,17 +91,17 @@ while True:
 
     match genero_producto:
         
-        case "discos":
+        case "disco":
             if ventas_discos == False or importe_producto < importe_minimo_discos:
                 importe_minimo_discos = importe_producto
                 nombre_minimo_discos = nombre_producto
                 ventas_discos = True
 
-        case "memorias":
+        case "memoria":
             if importe_producto < 850:
                 contador_ventas_memoria += 1
 
-        case "motherboards":
+        case "motherboard":
             pass
 
     acumulador_importe += importe_producto
@@ -81,18 +116,18 @@ while True:
 
 promedio_importe_por_venta = acumulador_importe / contador_ventas
 
-mensaje_datos = "El producto del importe mas caro es '{0}' con un precio de {1}".format(nombre_maximo, importe_maximo)
-mensaje_datos += "\nEl promedio de importe por venta es de {0:.2f}".format(promedio_importe_por_venta)
+mensaje_datos_ventas = "El producto del importe mas caro es '{0}' con un precio de {1}".format(nombre_maximo, importe_maximo)
+mensaje_datos_ventas += "\nEl promedio de importe por venta es de {0:.2f}".format(promedio_importe_por_venta)
 
 if ventas_discos:
-    mensaje_datos += "\nEl disco con menor importe es '{0}' con un precio de {1}".format(nombre_minimo_discos,importe_minimo_discos)
+    mensaje_datos_ventas += "\nEl disco con menor importe es '{0}' con un precio de {1}".format(nombre_minimo_discos,importe_minimo_discos)
 else:
-    mensaje_datos += "\nNo se compro ningun disco"
+    mensaje_datos_ventas += "\nNo se compro ningun disco"
 
 if contador_ventas_memoria > 0:
-    mensaje_datos += "\nLa cantidad de ventas de memorias con un precio menor a 850 es de: {0}".format(contador_ventas_memoria)
+    mensaje_datos_ventas += "\nLa cantidad de ventas de memorias con un precio menor a 850 es de: {0}".format(contador_ventas_memoria)
 else:
-    mensaje_datos += "\nNo se vendieron memorias con un precio menor a 850"
+    mensaje_datos_ventas += "\nNo se vendieron memorias con un precio menor a 850"
 
 
-print(mensaje_datos)
+print(mensaje_datos_ventas)
