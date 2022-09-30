@@ -34,7 +34,7 @@ def menu_principal():
                 funciones.imprimir_personajes_por_inteligencia(lista_personajes)    
 
             case 6:
-                funciones.archivar_lista(lista_generada, "Practica preparcial\lista_archivada.csv")
+                funciones.archivar_lista(lista_generada, "Programa Preparcial\lista_archivada.csv")
 
             case 7:
                 print("Adios!")
@@ -45,5 +45,5 @@ def menu_principal():
 
 
 
-lista_personajes = funciones.importar_lista("Practica preparcial\data_stark.json")
+lista_personajes = funciones.importar_lista("Programa Preparcial\data_stark.json")
 menu_principal()

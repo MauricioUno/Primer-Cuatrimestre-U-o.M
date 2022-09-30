@@ -1,5 +1,6 @@
 import json
 import re
+# personajes: list [dict]
 
 def importar_lista(direccion: str):
     '''
@@ -363,14 +364,16 @@ def archivar_lista(personajes: list, path: str):
     '''
     copia_personajes = personajes.copy()
     if type (copia_personajes) == type([]) and len(copia_personajes) > 0 :
+
         mensaje = ""
         for personaje in copia_personajes:
             for clave in personaje:
-                mensaje += "{0}: {1}; ".format(clave, personaje[clave])
-            mensaje = re.sub("; $", "", mensaje)
+                mensaje += "{0}, ".format(personaje[clave])
+            mensaje = re.sub(", $", "", mensaje)
             mensaje += "\n" 
         
         with open(path, "w") as archivo:
+            archivo.write("Nombre, Identidad, Altura, Peso, Fuerza, Inteligencia\n")
             archivo.write(mensaje)  
         print("Lista archivada")
     else:

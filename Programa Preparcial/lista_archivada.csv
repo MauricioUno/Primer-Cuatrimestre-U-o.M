@@ -1,10 +1,25 @@
-nombre: Howard the Duck; identidad: Howard (Last name unrevealed); altura: 79.35; peso: 18.45; fuerza: 2; inteligencia: 
-nombre: Rocket Raccoon; identidad: Rocket Raccoon; altura: 122.77; peso: 25.73; fuerza: 5; inteligencia: average
-nombre: Wolverine; identidad: Logan; altura: 160.7; peso: 135.21; fuerza: 35; inteligencia: good
-nombre: Black Widow; identidad: Natasha Romanoff; altura: 170.79; peso: 59.34; fuerza: 15; inteligencia: good
-nombre: Mystique; identidad: Raven Darkholme; altura: 178.65; peso: 54.96; fuerza: 15; inteligencia: good
-nombre: Spider-Man; identidad: Peter Parker; altura: 178.28; peso: 74.25; fuerza: 55; inteligencia: high
-nombre: Storm; identidad: Ororo Munroe; altura: 180.72; peso: 57.5; fuerza: 10; inteligencia: good
-nombre: Gamora; identidad: Gamora Zen Whoberi Ben Titan; altura: 183.65; peso: 77.77; fuerza: 85; inteligencia: good
-nombre: Thing; identidad: Ben Grimm; altura: 183.55; peso: 225.42; fuerza: 85; inteligencia: good
-nombre: Thor; identidad: Thor Odinson; altura: 198.35; peso: 288.61; fuerza: 100; inteligencia: good
+Nombre, Identidad, Altura, Peso, Fuerza, Inteligencia
+Groot, Groot, 701.12, 4.82, 85, good
+Hulk, Bruce Banner, 244.4, 630.9, 100, high
+Colossus, Piotr Nikolaievitch Rasputin, 226.13, 225.52, 85, good
+Iron Man, Tony Stark, 198.91, 191.88, 85, high
+Thor, Thor Odinson, 198.35, 288.61, 100, good
+Drax the Destroyer, Arthur Sampson Douglas, 193.01, 306.42, 80, average
+Hawkeye, Clint Barton, 191.01, 104.93, 15, average
+Ghost Rider, Johnny Blaze, 188.51, 99.2, 55, average
+Blade, Eric Brooks, 188.45, 97.4, 30, good
+Star-Lord, Peter Jason Quill, 188.25, 79.21, 20, good
+Captain America, Steve Rogers, 188.01, 108.94, 20, good
+Deadpool, Wade Wilson, 188.0, 95.32, 35, good
+Nick Fury, Nicholas Joseph Fury, 185.88, 99.28, 15, good
+Daredevil, Matt Murdock, 183.68, 90.45, 15, good
+Gamora, Gamora Zen Whoberi Ben Titan, 183.65, 77.77, 85, good
+Thing, Ben Grimm, 183.55, 225.42, 85, good
+Punisher, Frank Castle, 183.26, 90.9, 20, good
+Storm, Ororo Munroe, 180.72, 57.5, 10, good
+Mystique, Raven Darkholme, 178.65, 54.96, 15, good
+Spider-Man, Peter Parker, 178.28, 74.25, 55, high
+Black Widow, Natasha Romanoff, 170.79, 59.34, 15, good
+Wolverine, Logan, 160.7, 135.21, 35, good
+Rocket Raccoon, Rocket Raccoon, 122.77, 25.73, 5, average
+Howard the Duck, Howard (Last name unrevealed), 79.35, 18.45, 2, 
