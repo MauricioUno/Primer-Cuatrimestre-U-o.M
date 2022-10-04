@@ -1,7 +1,7 @@
 import re
 
 #-------- Validar lista con diccionarios ---------#
-def validar_lista_con_diccionarios(pokemones: list) -> bool:
+def validar_lista_con_diccionarios(lista: list) -> bool:
     '''
     Parametros:
     - Una lista
@@ -15,9 +15,9 @@ def validar_lista_con_diccionarios(pokemones: list) -> bool:
     - False si ocurre un error
     '''
     validar_lista = True
-    if type(pokemones) == type([]) and len(pokemones) > 0:
-        for pokemon in pokemones:
-            if type(pokemon) != type({}):
+    if type(lista) == type([]) and len(lista) > 0:
+        for elemento in lista:
+            if type(elemento) != type({}):
                 validar_lista = False
                 break
     else:
