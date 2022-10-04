@@ -277,7 +277,7 @@ def calcular_promedio_cantidades_dato(pokemones: list, dato: str) -> float:
     de elementos de todas las listas de la clave pasada como parametro
     - Luego divide el acumulador por la cantidad de pokemon en la lista
 
-    Retorna:
+    Retorno:
     - El promedio de elementos en la lista de la clave
     '''
     copia_pokemones = copy.deepcopy(pokemones)
@@ -303,7 +303,7 @@ def crear_lista_segun_el_promedio(pokemones: list, tipo: str, dato: str) -> list
     la nueva lista los pokemon cuya cantidad de elementos en la clave correspondiente
     sea mayor/menor al promedio.
 
-    Retorna:
+    Retorno:
     - La lista con los pokemon con elementos mayor/menor al promedio
     '''
     copia_pokemones = copy.deepcopy(pokemones)
@@ -330,7 +330,7 @@ def listar_e_imprimir_segun_el_promedio(pokemones: list) -> list:
     segun corresponda
     - Se imprime los nombres junto con los elementos de la clave correspondiente
 
-    Retorna:
+    Retorno:
     - La lista creada 
     - Una lista vacia si ocurre un error
     '''
@@ -342,7 +342,10 @@ def listar_e_imprimir_segun_el_promedio(pokemones: list) -> list:
         tipo = ingresar_dato("Ingrese los pokemon a listar respecto al promedio (mayor/menor): ", "^(mayor|menor)$")
         if tipo != -1:
             lista_generada = crear_lista_segun_el_promedio(copia_pokemones, tipo, clave)
-            imprimir_nombres_y_dato(lista_generada, clave, True)
+            if validar_lista_con_diccionarios(lista_generada):
+                imprimir_nombres_y_dato(lista_generada, clave, True)
+            else:
+                print("Ningun pokemon tiene elementos {0} al promedio".format(tipo))
         else:
             print("Error!, Ingrese mayor o menor!")
     else:
@@ -389,14 +392,17 @@ def listar_e_imprimir_pokemon_por_tipo(pokemones:list):
     '''
     copia_pokemones = copy.deepcopy(pokemones)
 
-    tipos_de_pokemon = "(planta|fuego|agua|acero|volador|electrico|fantasma|veneno|hielo|lucha|psiquico)"
+    tipos_de_pokemon = "(planta|fuego|agua|acero|volador|electrico|fantasma|veneno|hielo|lucha|psiquico|dragon|oscuridad|piedra|tierra|bicho|normal|hada)"
     reg_ex_tipos = "^" + tipos_de_pokemon + "$"
     mensaje_input = "Ingrese el tipo del pokemon a buscar: \n" + tipos_de_pokemon + "\n>> "
 
     tipo_buscado = ingresar_dato(mensaje_input, reg_ex_tipos)
     if tipo_buscado != -1:
         lista_generada = crear_lista_por_tipos(copia_pokemones, "tipo", tipo_buscado)
-        imprimir_nombres_y_dato(lista_generada, "tipo", True)
+        if validar_lista_con_diccionarios(lista_generada):
+            imprimir_nombres_y_dato(lista_generada, "tipo", True)
+        else:
+            print("No hay ningun pokemon del tipo buscado")
     else:
         print("Error! Tipo ingresado no valido!")
 
@@ -416,19 +422,17 @@ def archivar_lista(pokemones: list, direccion: str):
     el string generado en un archivo csv
     '''
     copia_pokemones = pokemones.copy()
-    if type (copia_pokemones) == type([]) and len(copia_pokemones) > 0 :
-
-        mensaje = ""
-        for pokemon in copia_pokemones:
-            for clave in pokemon:
-                mensaje += "{0}; ".format(pokemon[clave])
-            mensaje = re.sub("; $", "", mensaje)
-            mensaje += "\n" 
+    if validar_lista_con_diccionarios(copia_pokemones):
         
         with open(direccion, "w") as archivo:
             archivo.write("id; nombre; tipo; evoluciones; poder; fortaleza; debilidad\n")
-            archivo.write(mensaje)  
-        print("Lista archivada")
+            for pokemon in copia_pokemones:
+                mensaje = ""
+                for clave in pokemon:
+                    mensaje += "{0}; ".format(pokemon[clave])
+                mensaje = re.sub("; $", "\n", mensaje)
+                archivo.write(mensaje)  
+            print("Lista archivada")
     else:
         print("No hay informacion para archivar")
 

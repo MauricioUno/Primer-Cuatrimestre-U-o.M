@@ -1,7 +1,4 @@
 id; nombre; tipo; evoluciones; poder; fortaleza; debilidad
-6; charizard; ['fuego', 'volador']; ['mega-charizard x', 'mega-charizard y', 'charizard gigamax']; 18; ['planta']; ['agua']
-94; gengar; ['fantasma', 'veneno']; []; 30; ['psiquico', 'volador']; ['siniestro']
-144; articuno; ['hielo', 'volador']; []; 30; ['volador', 'planta']; ['fuego', 'agua', 'acero']
-145; zapdos; ['electrico', 'volador']; []; 30; ['agua']; ['planta', 'piedra']
-146; moltres; ['fuego', 'volador']; []; 30; ['planta', 'electrico']; ['agua', 'piedra']
+150; mewtwo; ['psiquico']; ['mega-mewtwo x', 'mega-mewtwo y']; 25; ['agua', 'planta', 'fuego', 'electrico']; ['fantasma', 'oscuridad']
+151; mew; ['psiquico']; []; 24; ['agua', 'planta', 'fuego', 'electrico']; ['fantasma', 'oscuridad']
 448; lucario; ['lucha', 'acero']; ['mega lucario']; 24; ['piedra', 'agua', 'hielo', 'planta']; ['electrico', 'agua', 'fuego', 'psiquico', 'volador']
