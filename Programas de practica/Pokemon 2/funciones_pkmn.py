@@ -40,7 +40,7 @@ def validar_lista_con_diccionarios(pokemones: list) -> bool:
         for pokemon in pokemones:
             if type(pokemon) != type({}):
                 validar_lista = False
-                break
+                break     
     else:
         validar_lista = False
 
@@ -429,12 +429,17 @@ def archivar_lista(pokemones: list, direccion: str):
     if validar_lista_con_diccionarios(copia_pokemones):
         
         with open(direccion, "w") as archivo:
-            archivo.write("id; nombre; tipo; evoluciones; poder; fortaleza; debilidad\n")
+            archivo.write("id, nombre, tipo, evoluciones, poder, fortaleza, debilidad\n")
             for pokemon in copia_pokemones:
                 mensaje = ""
                 for clave in pokemon:
-                    mensaje += "{0}; ".format(pokemon[clave])
-                mensaje = re.sub("; $", "\n", mensaje)
+                    if type(pokemon[clave]) == type([]):
+                        lista_string = "/".join(pokemon[clave])
+                        mensaje += "{0}, ".format(lista_string)
+                    else:
+                        mensaje += "{0}, ".format(pokemon[clave])
+
+                mensaje = re.sub(", $", "\n", mensaje)
                 archivo.write(mensaje)  
             print("Lista archivada")
     else:

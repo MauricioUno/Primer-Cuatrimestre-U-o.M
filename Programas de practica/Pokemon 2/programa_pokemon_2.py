@@ -1,8 +1,17 @@
 import funciones_pkmn
 
 def menu_principal():
+
+    lista_pokemones = funciones_pkmn.extraer_lista("Programas de practica\Pokemon 2\pokedex.json")
+    if funciones_pkmn.validar_lista_con_diccionarios(lista_pokemones):
+        lista_validada = True
+    else:
+        print("El origen de datos no tiene el formato correcto")
+        lista_validada = False
+
     lista_generada = []
-    while True:
+
+    while lista_validada:
         menu = "\nOpciones:\
                 \n1- Listar los ultimos N pokemones\
                 \n2- Ordenar y Listar pokemon por poder\
@@ -16,7 +25,7 @@ def menu_principal():
         opcion = input(">> ")
         opcion = int (funciones_pkmn.validar_dato(opcion, "^[0-9]+$"))
         match opcion:
-            
+        
             case 1:
                 lista_generada = funciones_pkmn.listar_e_imprimir_ultimos_N_pokemon(lista_pokemones)
 
@@ -42,10 +51,4 @@ def menu_principal():
             case _:
                 print("Ingrese una opcion valida!")
 
-
-
-lista_pokemones = funciones_pkmn.extraer_lista("Programas de practica\Pokemon 2\pokedex.json")
-if funciones_pkmn.validar_lista_con_diccionarios(lista_pokemones):
-    menu_principal()
-else:
-    print("El origen de datos no tiene el formato correcto")
+menu_principal()
