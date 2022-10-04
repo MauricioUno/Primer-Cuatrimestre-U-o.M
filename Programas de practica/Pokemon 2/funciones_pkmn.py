@@ -21,7 +21,7 @@ def extraer_lista(direccion: str) -> list:
 
     return diccionario["pokemones"]
 
-#-------- Validar la lista extraida del json ---------#
+#-------- Validar lista con diccionarios ---------#
 def validar_lista_con_diccionarios(pokemones: list) -> bool:
     '''
     Parametros:
@@ -50,11 +50,12 @@ def validar_lista_con_diccionarios(pokemones: list) -> bool:
 def validar_dato(dato_ingresado: str, reg_ex_opciones: str):
     '''
     Parametros: 
-    - Un string que corresponde a algo ingresado por el usuario
-    - La expresion regular de lo que considerado valido 
+    - Un string que corresponde al dato ingresado por el usuario
+    - La expresion regular de lo que es considerado valido 
 
-    Elimina los espacios vacios del string y verifica que 
-    corresponda a la expresion regular, 
+    Funcion:
+    - Elimina los espacios vacios del string
+    - Verifica que corresponda a la expresion regular.
 
     Retorna:
     - El string ingresado pasado a minusculas
@@ -72,14 +73,16 @@ def ingresar_dato(texto_input: str, reg_ex_opciones: str) -> str:
     '''
     Parametros:
     - El texto informando al usuario que debe ingresar
-    - La expresion regular correspondiente a las opciones permitidas
+    - La expresion regular correspondiente a las opciones validas
 
-    Se pide al usuario que ingrese algo, el texto ingresado sera validado
-    en funcion de la expresion regular pasada como parametro
+    Funcion:
+    - Se pide al usuario que ingrese algo
+    - Valida lo ingresado en funcion de la expresion regular pasada como
+    parametro
 
-    Retorna:
-    - El string validado si lo ingresado esta dentro de la expresion regular
-    - -1 en caso que no sea lo pedido
+    Retorno:
+    - El string ingresado
+    - -1 en caso que no este dentro de la expresion regular
     '''
     dato_ingresado = input (texto_input)
     dato_ingresado = validar_dato(dato_ingresado, reg_ex_opciones)
@@ -95,8 +98,8 @@ def validar_rango_entero(numero: int, minimo: int, maximo: int) -> bool:
     - El limite maximo del rango (incluye el numero)
 
     Funcion:
-    - Verifica que el numero pasado como parametro no supere el limite
-    tambien pasado como parametro
+    - Verifica que el numero pasado como parametro este dentro del
+    rango
 
     Retorno:
     - True en caso que se encuentre dentro del rango
@@ -125,7 +128,7 @@ def imprimir_nombres_y_dato(pokemones: list, dato: str, dato_es_lista = False):
         if dato_es_lista:
             valor_dato = ", ".join(pokemon[dato])
         else:
-            valor_dato = str (pokemon[dato])
+            valor_dato = "{0}".format(pokemon[dato])
 
         mensaje_datos += valor_dato
         print(mensaje_datos)
@@ -415,11 +418,12 @@ def archivar_lista(pokemones: list, direccion: str):
     - Una lista de diccionarios con datos de los pokemones
     - La direccion y nombre del archivo
 
-    Valida si es una lista con almenos un elemento
-    La funcion guarda en un string una linea de texto por cada pokemon, 
-    en la linea se incluiran todos los datos del pokemon
-    Cuando se escriben todos los datos de los pokemones, se guardara
-    el string generado en un archivo csv
+    Funcion:
+    - Valida que sea una lista de diccionarios
+    - Escribe en el archivo la lista generada en los puntos [1-4]
+    - Escribe en el archivo las diferentes claves de los diccionarios
+    - Itera la lista, conviertiendo toda la informacion de la lista en formato
+    csv, se escribe una linea por cada pokemon
     '''
     copia_pokemones = pokemones.copy()
     if validar_lista_con_diccionarios(copia_pokemones):

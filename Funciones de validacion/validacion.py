@@ -1,40 +1,94 @@
 import re
+
+#-------- Validar lista con diccionarios ---------#
+def validar_lista_con_diccionarios(pokemones: list) -> bool:
+    '''
+    Parametros:
+    - Una lista
+
+    Funcion:
+    - Verifica que la lista pasada como parametro tenga almenos
+    un elemento y que todos sus elementos sean del tipo diccionario
+
+    Retorno:
+    - True en caso que se cumplan todas las validaciones
+    - False si ocurre un error
+    '''
+    validar_lista = True
+    if type(pokemones) == type([]) and len(pokemones) > 0:
+        for pokemon in pokemones:
+            if type(pokemon) != type({}):
+                validar_lista = False
+                break
+    else:
+        validar_lista = False
+
+    return validar_lista
+
+
 #-------- Validar con expresion regular --------#
-def validar_string(opcion: str, reg_ex_opciones: str):
+def validar_dato(dato_ingresado: str, reg_ex_opciones: str):
     '''
     Parametros: 
-    - Un string que corresponde a algo ingresado por el usuario
-    - La expresion regular de lo que considerado valido 
+    - Un string que corresponde al dato ingresado por el usuario
+    - La expresion regular de lo que es considerado valido 
 
-    Elimina los espacios vacios del string y verifica que 
-    corresponda a la expresion regular, 
+    Funcion:
+    - Elimina los espacios vacios del string
+    - Verifica que corresponda a la expresion regular.
 
     Retorna:
     - El string ingresado pasado a minusculas
     - -1 Si no corresponde a la regEx
     '''
-    opcion = opcion.strip()
+    dato_ingresado = dato_ingresado.strip()
     valor_retorno = -1
-    if re.search(reg_ex_opciones, opcion, re.IGNORECASE):
-        valor_retorno = opcion.lower()
+    if re.search(reg_ex_opciones, dato_ingresado, re.IGNORECASE):
+        valor_retorno = dato_ingresado.lower()
 
     return valor_retorno
 
+
 #-------- Pedir dato al usuario --------#
-def dato_ingresado(texto_input: str, dato_buscado: str) -> str:
+def ingresar_dato(texto_input: str, reg_ex_opciones: str) -> str:
     '''
     Parametros:
     - El texto informando al usuario que debe ingresar
-    - La expresion regular correspondiente a las opciones permitidas
+    - La expresion regular correspondiente a las opciones validas
 
-    Se pide al usuario que ingrese algo, el texto ingresado sera validado
-    en funcion de la expresion regular pasada como parametro
+    Funcion:
+    - Se pide al usuario que ingrese algo
+    - Valida lo ingresado en funcion de la expresion regular pasada como
+    parametro
 
-    Retorna:
-    - El string validado si lo ingresado esta dentro de la expresion regular
-    - -1 en caso que no sea lo pedido
+    Retorno:
+    - El string ingresado
+    - -1 en caso que no este dentro de la expresion regular
     '''
-    string_ingresado = input (texto_input)
-    string_ingresado = validar_string(string_ingresado, dato_buscado)
+    dato_ingresado = input (texto_input)
+    dato_ingresado = validar_dato(dato_ingresado, reg_ex_opciones)
 
-    return string_ingresado
+    return dato_ingresado
+
+
+#-------- Validar Rango Entero ---------#
+def validar_rango_entero(numero: int, minimo: int, maximo: int) -> bool:
+    '''
+    Parametros:
+    - Un entero representando el numero validar
+    - El limite minimo del rango (incluye el numero)
+    - El limite maximo del rango (incluye el numero)
+
+    Funcion:
+    - Verifica que el numero pasado como parametro este dentro del
+    rango
+
+    Retorno:
+    - True en caso que se encuentre dentro del rango
+    - False si esta fuera del rango
+    '''
+    numero_validado = False
+    if (numero > minimo-1) and (numero < maximo+1):
+        numero_validado = True
+
+    return numero_validado
