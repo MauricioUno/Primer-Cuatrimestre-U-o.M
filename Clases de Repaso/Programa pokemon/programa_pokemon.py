@@ -38,10 +38,11 @@ def tiene_id_par(pokemon: dict) -> bool:
     En caso de que el 'id' del pokemon sea par, retorna True, caso contrario False
     
     '''
+    es_par = False
     if(pokemon["id"] % 2 == 0):
-        return True
-    else:
-        return False
+        es_par = True    
+    
+    return es_par
 
 # 02.2
 def obtener_id_pokemon(pokemon: dict) -> str:
@@ -66,8 +67,8 @@ def imprimir_pokedex_id_par(pokemones: list):
 
     '''
     for pokemon in pokemones:
-        es_par = tiene_id_par(pokemon)
-        if es_par:
+
+        if tiene_id_par(pokemon):
             nombre_pokemon = obtener_nombre_pokemon(pokemon)
             id_pokemon = obtener_id_pokemon(pokemon)
             mensaje_id_par = "Nombre: {0} | ID: {1}".format(nombre_pokemon, id_pokemon)
@@ -109,4 +110,37 @@ def imprimir_pokedex_mult_25(pokemones: list):
 
 
 # 04.1
-#{0:0n.d}
+def nombre_format_pokemon(pokemon: dict) -> str:
+    '''
+    Parametros:
+    - Un diccionario con los datos de un pokemon
+
+    Funcion:
+    - Crea un string representando el nombre e id del pokemon (#000)
+
+    Retorna:
+    - El string creado
+    '''
+    nombre_pokemon = obtener_nombre_pokemon(pokemon)
+    id_pokemon = int(obtener_id_pokemon(pokemon))
+
+    entrada_pokedex = "#{0:03d} - {1}".format(id_pokemon, nombre_pokemon)
+    print(entrada_pokedex)
+
+
+# 04.2
+def pokedex_imprimir_nombres_poke_fmt(pokemones: list):
+    '''
+    Parametros:
+    - Lista de diccionarios con datos de pokemones
+
+    Funcion:
+    - Itera la lista de pokemones e imprime el numero y 
+    nombre del pokemon en formato pokedex
+    '''
+
+    for pokemon in pokemones:
+        nombre_format_pokemon(pokemon)
+
+
+# 05.2
