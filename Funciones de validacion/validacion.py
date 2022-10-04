@@ -92,3 +92,6 @@ def validar_rango_entero(numero: int, minimo: int, maximo: int) -> bool:
         numero_validado = True
 
     return numero_validado
+
+
+

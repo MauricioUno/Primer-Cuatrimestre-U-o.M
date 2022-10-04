@@ -369,8 +369,8 @@ def archivar_lista(personajes: list, path: str):
         for personaje in copia_personajes:
             for clave in personaje:
                 mensaje += "{0}, ".format(personaje[clave])
-            mensaje = re.sub(", $", "", mensaje)
-            mensaje += "\n" 
+            mensaje = re.sub(", $", "\n", mensaje)
+            
         
         with open(path, "w") as archivo:
             archivo.write("Nombre, Identidad, Altura, Peso, Fuerza, Inteligencia\n")

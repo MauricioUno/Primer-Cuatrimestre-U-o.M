@@ -433,11 +433,7 @@ def archivar_lista(pokemones: list, direccion: str):
             for pokemon in copia_pokemones:
                 mensaje = ""
                 for clave in pokemon:
-                    if type(pokemon[clave]) == type([]):
-                        lista_string = "/".join(pokemon[clave])
-                        mensaje += "{0}, ".format(lista_string)
-                    else:
-                        mensaje += "{0}, ".format(pokemon[clave])
+                    mensaje += "{0}, ".format(pokemon[clave])
 
                 mensaje = re.sub(", $", "\n", mensaje)
                 archivo.write(mensaje)  
