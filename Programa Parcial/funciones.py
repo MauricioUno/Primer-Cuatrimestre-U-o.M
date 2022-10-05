@@ -147,7 +147,7 @@ def imprimir_personaje_mas_alto(personajes: list, genero: str):
 
     Funcion:
     - Se crea una lista de un elemento con el personaje de mayor altura del genero
-    pasado como parametro
+    pasado como
     - Se imprimen los personajes con mayor altura del genero pasado como parametro
     '''
     mayor_altura_genero = []
