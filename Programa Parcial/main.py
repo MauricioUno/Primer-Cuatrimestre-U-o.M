@@ -2,12 +2,13 @@ import funciones
 
 def starwars_app():
     lista_personajes = funciones.cargar_json("Programa Parcial\data.json")
-    personajes_star_wars = funciones.convertir_numeros_lista(lista_personajes)
+    personajes_star_wars = list(map(funciones.castear_claves_numericas, lista_personajes))
     lista_ordenada = []
 
     while(True):
-        print("\n1 - Listar los personajes ordenados por altura\n2 - Mostrar el personaje mas alto de cada genero\n3 - Ordenar los personajes por peso\n4 - Buscar personajes\n5 - Exportar lista personajes a CSV\n6 - Salir\n")
+        print("\n1 - Listar los personajes ordenados por altura\n2 - Mostrar el personaje mas alto de cada genero\n3 - Listar los personajes ordenados por peso\n4 - Buscar personajes\n5 - Exportar lista personajes a CSV\n6 - Salir\n")
         respuesta = input()
+
         if(respuesta=="1"):
             lista_ordenada = funciones.imprimir_lista_ordenada(personajes_star_wars, "height")
         elif(respuesta=="2"):
