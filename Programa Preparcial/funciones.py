@@ -378,3 +378,4 @@ def archivar_lista(personajes: list, path: str):
         print("Lista archivada")
     else:
         print("No hay informacion para archivar")
+        
