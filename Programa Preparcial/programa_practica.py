@@ -1,4 +1,4 @@
-import functest
+import funciones_lambda
 
 def menu_principal():
     lista_generada = []
@@ -14,27 +14,27 @@ def menu_principal():
 
         print(menu)
         opcion = input(">> ")
-        opcion = int (functest.validar_string(opcion, "^[0-9]+$"))
+        opcion = int (funciones_lambda.validar_string(opcion, "^[0-9]+$"))
 
         match opcion:
             
             case 1:
-                lista_generada = functest.guardar_imprimir_cantidad_personajes(lista_personajes)
+                lista_generada = funciones_lambda.guardar_imprimir_cantidad_personajes(lista_personajes)
 
             case 2:
-                lista_generada = functest.guardar_imprimir_personajes_ordenados(lista_personajes, "altura")
+                lista_generada = funciones_lambda.guardar_imprimir_personajes_ordenados(lista_personajes, "altura")
                 
             case 3:
-                lista_generada = functest.guardar_imprimir_personajes_ordenados(lista_personajes, "fuerza")     
+                lista_generada = funciones_lambda.guardar_imprimir_personajes_ordenados(lista_personajes, "fuerza")     
 
             case 4:
-                lista_generada = functest.guardar_imprimir_personajes_segun_el_promedio(lista_personajes)    
+                lista_generada = funciones_lambda.guardar_imprimir_personajes_segun_el_promedio(lista_personajes)    
 
             case 5:
-                functest.imprimir_personajes_por_inteligencia(lista_personajes)    
+                funciones_lambda.imprimir_personajes_por_inteligencia(lista_personajes)    
 
             case 6:
-                functest.archivar_lista(lista_generada, "Programa Preparcial\lista_archivada.csv")
+                funciones_lambda.archivar_lista(lista_generada, "Programa Preparcial\lista_archivada.csv")
 
             case 7:
                 print("Adios!")

@@ -94,4 +94,26 @@ def validar_rango_entero(numero: int, minimo: int, maximo: int) -> bool:
     return numero_validado
 
 
+#-------- Entrar en un while hasta que se ingrese el dato correcto ---------#
+def exigir_dato_valido(texto_input: str, texto_error: str, reg_ex) -> str:
+    '''
+    Parametros:
+    - El texto que le informara al usuario que debe ingresar
+    - El texto que se mostrara en caso que el usuario ingrese algo
+    no valido
+    - La expresion regular que define las opciones validas
+
+    Funcion:
+    - Pedira un dato al usuario hasta que sea ingresado algo
+    considerado valido en funcion de la expresion regular pasada
+    como parametro
+
+    Retorno:
+    - El dato ingresado
+    '''
+    dato_ingresado = ingresar_dato(texto_input, reg_ex)
+    while dato_ingresado == -1:
+        dato_ingresado = ingresar_dato(texto_error, reg_ex)
+    
+    return dato_ingresado
 
