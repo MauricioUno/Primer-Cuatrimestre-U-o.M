@@ -49,12 +49,9 @@ for habilidad in lista_habilidades:
 
     nueva_lista_habilidades.append(lista_valores)
 
-# No entiendo del todo el funcionamiento, asi que lo dejo comentado
-'''
-def nivel_de_poder(indice_poder):
-    return indice_poder[1]
-nueva_lista_habilidades.sort(key = nivel_de_poder)
-'''
+
+nueva_lista_habilidades.sort(key = lambda habilidad : habilidad[1])
+
 
 diccionario_habilidades = {"Habilidades UTN": nueva_lista_habilidades}
 for clave in diccionario_habilidades:
