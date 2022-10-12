@@ -254,13 +254,6 @@ def listar_e_imprimir_segun_el_promedio(pokemones: list) -> list:
 
 # Punto 5
 #-------- Buscar pokemon por tipo --------#
-def buscar_tipo(pokemon: dict, tipo_buscado: str):
-
-    for tipo in pokemon["tipo"]:
-        if re.search(tipo_buscado, tipo, re.IGNORECASE):
-            return True
-    return False
-    
 def listar_e_imprimir_pokemon_por_tipo(pokemones:list):
     '''
     Parametros:
@@ -281,7 +274,7 @@ def listar_e_imprimir_pokemon_por_tipo(pokemones:list):
     tipo_buscado = ingresar_dato(mensaje_input, reg_ex_tipos)
     if tipo_buscado != -1:
         
-        lista_generada = list(filter(lambda pokemon: buscar_tipo(pokemon, tipo_buscado) == True, copia_pokemones))
+        lista_generada = list(filter(lambda pokemon: tipo_buscado in pokemon["tipo"], copia_pokemones))
         if validar_lista_con_diccionarios(lista_generada):
             imprimir_nombres_y_dato(lista_generada, "tipo", True)
         else:
