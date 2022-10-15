@@ -59,6 +59,38 @@
 			"height": "182",
 			"mass": "77",
 			"gender": "male"
+		},
+		{
+			"name": "Clone #2",
+			"height": "175",
+			"mass": "75",
+			"data": {
+				"gender": "male"
+			}
+		},
+		{
+			"name": "Clone #7",
+			"height": "165",
+			"mass": "60",
+			"data": {
+				"gender": "female"
+			}
+		},
+		{
+			"name": "Clone #25",
+			"height": "160",
+			"mass": "60",
+			"data": {
+				"gender": "female"
+			}
+		},
+		{
+			"name": "Clone #90",
+			"height": "170",
+			"mass": "65",
+			"data": {
+				"gender": "n/a"
+			}
 		}
 	]
 }

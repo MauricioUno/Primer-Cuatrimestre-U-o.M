@@ -282,7 +282,7 @@ def listar_e_imprimir_pokemon_por_tipo(pokemones:list):
     else:
         print("Error! Tipo ingresado no valido!")
 
-#s
+
 # Punto 6
 #-------- Archivar lista en un csv --------#
 def archivar_lista(pokemones: list, direccion: str):
