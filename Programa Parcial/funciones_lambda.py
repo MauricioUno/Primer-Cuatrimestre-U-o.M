@@ -21,6 +21,7 @@ def cargar_json(direccion: str) -> list:
 
     return diccionario ["results"]
 
+
 def castear_claves_numericas(personaje: dict) -> list:
     '''
     Parametros:
@@ -125,6 +126,7 @@ def imprimir_nombre_con_dato(personajes: list, clave: str):
         print("Nombre: {0} | {1}: {2}".format(personaje["name"], clave.capitalize(), personaje[clave]))
 
 
+
 def imprimir_lista_ordenada(personajes: list, clave: str) -> list:
     '''
     Parametros:
@@ -215,7 +217,6 @@ def imprimir_personajes_busqueda(personajes: list):
         imprimir_datos_personajes_lista(lista_coincidencias)
     else:
         print("Ningun personaje coincide con la busqueda realizada")
-
 
 def imprimir_ultimo_personaje_lista_mezclada(personajes: list):
     '''
