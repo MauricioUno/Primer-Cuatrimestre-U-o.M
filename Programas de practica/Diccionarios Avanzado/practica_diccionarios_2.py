@@ -1,3 +1,4 @@
+from copy import deepcopy
 persona_1 = {
     "nombre": "Maximo",
     "apellido": "Cozzetti",
@@ -67,17 +68,64 @@ persona_2 = persona_1
 def punto_uno():
     persona_1["domicilio"].update({"calle": "Raman Franco" , "altura": 5050 })
 
+def punto_dos():
+    telefono_existente = False
+    for telefono in (persona_1["telefonos"]):
+        if ("etiqueta", "trabajo") in telefono.items():
+            telefono.update({"etiqueta": "trabajo", "cod_pais": "+54", "cod_area": "11", "numero": "4201-4133"})
+            telefono_existente = True
 
-telefono_existente = False
-for indice, telefono in enumerate(persona_1["telefonos"]):
-    if "trabajo" in telefono.values():
-        telefono_existente = True
-        indice_telefono = indice
-        break
+    if not telefono_existente:
+            persona_1["telefonos"].append({"etiqueta": "trabajo", "cod_pais": "+54", "cod_area": "11", "numero": "4201-4133"})
 
-if telefono_existente:
-    persona_1["telefonos"][indice_telefono].update({"etiqueta": "trabajo", "cod_pais": "+54", "cod_area": "11", "numero": "4201-4133"})
-else:
-    persona_1["telefonos"].append({"etiqueta": "trabajo", "cod_pais": "+54", "cod_area": "11", "numero": "4201-4133"})
+def imprimir_items_diccionario(diccionario: dict):
+     if type(diccionario) == type ({}):
+        for dato in diccionario.items():
+            print(dato)
 
-print(persona_1["telefonos"])
+def punto_tres():
+    for dato in persona_1.items():
+        if type(dato[1]) == type ([]):
+            print("\nValores clave {0}: ".format(dato[0].capitalize()))
+            for indice,otro_dato in enumerate(dato[1]):
+                print("Elemento {0}: ".format(indice))
+                imprimir_items_diccionario(otro_dato)
+
+        elif type(dato[1]) == type ({}):
+            print("\nValores clave {0}: ".format(dato[0].capitalize()))    
+            imprimir_items_diccionario(dato[1])
+        else:
+            print(dato)
+
+def punto_cuatro():
+    id_persona_1 = id(persona_1)
+    id_persona_2 = id(persona_2)
+
+    if id_persona_1 == id_persona_2:
+        print("El ID de persona_1 es igual al ID de persona_2, por lo tanto hace referencia al mismo diccionario")
+    else:
+        print("No son el mismo diccionario")
+
+    persona_1.update({"nombre": "Emilio", "apellido": "Ravenna"})
+
+    print(persona_1)
+    print(persona_2)
+    # Los 'dos' diccionarios cambian el valor de las claves nombre y apellido
+
+def punto_cinco():
+    persona_3 = persona_1.copy()
+    persona_3.update({"nombre": "Gabriel", "apellido": "Medina"})
+    persona_3["identificacion"].update({"nro": "28.307.401"})
+
+    print(persona_1)
+    print(persona_3)
+    # Los valores del diccionario que sean objetos iterables no se copian, si no que se les pasa la referencia
+
+def punto_seis():
+    persona_4 = deepcopy(persona_1)
+    persona_4.update({"nombre": "Mario", "apellido": "Santos"})
+    persona_4["identificacion"].update({"nro": "29.407.901"})
+
+    print(persona_1)
+    print(persona_4)
+    # Se crea una copia completa de todo el contenido dentro del diccionario

@@ -135,22 +135,22 @@ def validar_rango_entero(numero: int, minimo: int, maximo: int) -> bool:
 
 def punto_uno():
     producto_buscado = input("Ingrese el producto que desea buscar: ")
-    producto = lista_precios.get(producto_buscado)
-    if producto != None:
-        print("Precio: {0} | Stock: {1}".format(producto["precio"], producto["stock"]))
+    datos_producto = lista_precios.get(producto_buscado)
+    if datos_producto != None:
+        print("Precio: {0} | Stock: {1}".format(datos_producto["precio"], datos_producto["stock"]))
     else:
         print("El producto no se encuentra en la lista")
 
 def punto_dos():
-    dato_ingresado = input("Ingrese el producto que desea comprar: ")
-    producto = lista_precios.get(dato_ingresado)
+    producto_buscado = input("Ingrese el producto que desea comprar: ")
+    datos_producto = lista_precios.get(producto_buscado)
 
-    if producto != None:
-        print("Precio: {0} | Stock: {1}".format(producto["precio"], producto["stock"]))
+    if datos_producto != None:
+        print("Precio: {0} | Stock: {1}".format(datos_producto["precio"], datos_producto["stock"]))
         
-        cantidad = int (ingresar_dato("Ingrese la cantidad a llevar({0}): ".format(producto["unidad_medida"]), "^[0-9]+$" ))
-        if validar_rango_entero(cantidad, 1, producto["stock"]):
-            print("El costo de la compra es: {0}".format(producto["precio"] * cantidad))
+        cantidad = int (ingresar_dato("Ingrese la cantidad a llevar({0}): ".format(datos_producto["unidad_medida"]), "^[0-9]+$" ))
+        if validar_rango_entero(cantidad, 1, datos_producto["stock"]):
+            print("El costo de la compra es: {0}".format(datos_producto["precio"] * cantidad))
         else:
             print("Cantidad ingresada no valida!")
         
@@ -183,10 +183,10 @@ def punto_cuatro():
         print(fruta)
 
 def punto_cinco():
-    dato_ingresado = input("Ingrese el producto que desea eliminar: ")
-    producto = lista_precios.get(dato_ingresado)
-    if producto != None:
-        lista_precios.pop(dato_ingresado)
+    producto_buscado = input("Ingrese el producto que desea eliminar: ")
+    datos_producto = lista_precios.get(producto_buscado)
+    if datos_producto != None:
+        lista_precios.pop(producto_buscado)
         print("Producto eliminado de la lista")
     else:
         print("El articulo no se encuentra en la lista")
