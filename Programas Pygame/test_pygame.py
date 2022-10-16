@@ -10,8 +10,10 @@ pygame.display.set_caption("COCO!")
 
 imagen_espacio = pygame.image.load("Programas Pygame\Espacio.jpg")
 window.blit(imagen_espacio, (0,0))
+
 i = 0
 while(running):
+    window.fill((0,0,0))
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
@@ -22,6 +24,7 @@ while(running):
             pygame.draw.rect(window,(0,100,0),(i,0,50,100))
             i += 1
 
+    
     pygame.display.flip()
 
 
