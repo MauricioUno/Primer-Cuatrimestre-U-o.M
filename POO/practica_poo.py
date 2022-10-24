@@ -1,4 +1,3 @@
-import pygame
 
 class Mascota:
     def __init__(self, nombre, apellido) -> None:
