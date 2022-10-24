@@ -1,5 +1,4 @@
 import pygame
-import math
 import random
 import tarjeta
 from constantes import *
@@ -49,7 +48,7 @@ def update(d_tablero):
             d_tablero["tiempo_ultimo_destape"] = 0
     
 
-def render(d_tablero,pantalla_juego, segundos, minutos):
+def render(d_tablero, pantalla_juego, d_textos):
     
     for aux_tarjeta in d_tablero["l_tarjetas"]:
         if(aux_tarjeta["visible"]):
@@ -58,13 +57,10 @@ def render(d_tablero,pantalla_juego, segundos, minutos):
             pantalla_juego.blit(aux_tarjeta["surface_hide"],aux_tarjeta["rect"])
 
 
-    font = pygame.font.SysFont("Arial Narrow", ALTO_TEXTO)
-    text = font.render("Tiempo: {0:02d}:{1:02d}".format(minutos, segundos), True, (255, 0, 0))
-    pantalla_juego.blit(text, (0,450))
+    pantalla_juego.blit(d_textos["time"], (0,450))
 
     if verificar_juego_terminado(d_tablero["l_tarjetas"]):
-        ganador = font.render("Terminado!", True, (255, 0, 0))
-        pantalla_juego.blit(ganador, (0,500))
+        pantalla_juego.blit(d_textos["juego_terminado"], (0,500))
 
 
 def verificar_juego_terminado(lista_tarjetas):
@@ -72,7 +68,7 @@ def verificar_juego_terminado(lista_tarjetas):
     if cant_tarjetas_descubiertas == len(lista_tarjetas):
         juego_terminado = True
         sonido_fondo.stop()
-        sonido_ganador.play(-1)
+        sonido_ganador.play()
     else:
         juego_terminado = False
 

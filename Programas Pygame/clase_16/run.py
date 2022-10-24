@@ -2,6 +2,7 @@ import pygame
 from constantes import *
 import tablero
 from sonidos import *
+import textos
 
 pygame.init() #Se inicializa pygame
 pantalla_juego = pygame.display.set_mode((ANCHO_PANTALLA, ALTO_PANTALLA+100))
@@ -16,13 +17,14 @@ pygame.time.set_timer(tiempo_de_inicio,3000)
 tablero_juego = tablero.init()
 tablero.mezclar_posicion_tarjetas(tablero_juego['l_tarjetas'])
 
-imagen_fondo = pygame.image.load(r"C:\Users\Mauricio\Documents\Pez UTN\Primer-Cuatrimestre-UnoMauricio\Programas Pygame\clase_16\recursos\imagen_fondo.jpg")
 
+imagen_fondo = pygame.image.load(PATH_RECURSOS + "\imagen_fondo.jpg")
 
 sonido_fondo.play(-1)
 
 segundos = 0
 minutos = 0
+textos_juego = textos.obtener_diccionario_textos(minutos,segundos)
 running = True
 juego_iniciado = False
 while running:
@@ -51,7 +53,8 @@ while running:
         
     tablero.update(tablero_juego)
     pantalla_juego.blit(imagen_fondo,(0,0))
-    tablero.render(tablero_juego,pantalla_juego, segundos, minutos)
+    textos.actualizar_reloj(textos_juego, minutos, segundos)
+    tablero.render(tablero_juego, pantalla_juego, textos_juego)
 
     pygame.display.flip()
 
