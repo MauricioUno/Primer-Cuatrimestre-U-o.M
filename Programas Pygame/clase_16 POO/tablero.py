@@ -48,7 +48,6 @@ def render(tablero: Tablero, pantalla_juego, textos: Texto):
         else:
             pantalla_juego.blit(aux_tarjeta.surface_hide,aux_tarjeta.rect)
 
-
     pantalla_juego.blit(textos.tiempo, (0,450))
 
     if tablero.verificar_juego_terminado():

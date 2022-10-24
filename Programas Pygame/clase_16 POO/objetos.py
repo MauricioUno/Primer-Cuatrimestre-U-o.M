@@ -5,6 +5,7 @@ from constantes import *
 from sonidos import *
 
 class Tarjeta:
+
     surface_hide = pygame.transform.scale(pygame.image.load(PATH_RECURSOS + r"\00.png"), (ANCHO_TARJETA,ALTO_TARJETA))
     def __init__(self,nombre_imagen, x, y) -> None:
         self.visible = False
@@ -20,6 +21,7 @@ class Tarjeta:
 
 
 class Tablero:
+    
     def __init__(self) -> None:
         self.lista_tarjetas = []
         self.tiempo = 0
