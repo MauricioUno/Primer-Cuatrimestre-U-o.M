@@ -81,7 +81,7 @@ def punto_dos():
 def imprimir_items_diccionario(diccionario: dict):
      if type(diccionario) == type ({}):
         for dato in diccionario.items():
-            print(dato)
+            print("{0}: {1}".format(dato[0].capitalize(), dato[1]))
 
 def punto_tres():
     for dato in persona_1.items():
@@ -95,8 +95,9 @@ def punto_tres():
             print("\nValores clave {0}: ".format(dato[0].capitalize()))    
             imprimir_items_diccionario(dato[1])
         else:
-            print(dato)
+            print("{0}: {1}".format(dato[0].capitalize(), dato[1]))
 
+punto_tres()
 def punto_cuatro():
     id_persona_1 = id(persona_1)
     id_persona_2 = id(persona_2)

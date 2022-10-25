@@ -4,7 +4,7 @@ from constantes import *
 from sonidos import *
 from objetos import *
 
-pygame.init() #Se inicializa pygame
+pygame.init()
 pantalla_juego = pygame.display.set_mode((ANCHO_PANTALLA, ALTO_PANTALLA+100))
 pygame.display.set_caption('The Simpsons Memotest')
 
@@ -14,7 +14,8 @@ pygame.time.set_timer(segundo,1000)
 tiempo_de_inicio = pygame.USEREVENT + 1
 pygame.time.set_timer(tiempo_de_inicio,3000)
 
-tablero_juego = tablero.init()
+tablero_juego = Tablero()
+tablero_juego.cargar_tarjetas()
 tablero_juego.mezclar_posicion_tarjetas()
 
 
@@ -27,6 +28,7 @@ minutos = 0
 textos_juego = Texto()
 running = True
 juego_iniciado = False
+
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -57,5 +59,4 @@ while running:
 
     pygame.display.flip()
 
-# Done! Time to quit.
 pygame.quit()

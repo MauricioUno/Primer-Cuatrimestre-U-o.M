@@ -31,6 +31,17 @@ class Tablero:
     def agregar_elemento(self, elemento: Tarjeta):
         self.lista_tarjetas.append(elemento)
 
+    def cargar_tarjetas(self):
+        i = 1
+        for x in range(0,CANTIDAD_TARJETAS_H*ANCHO_TARJETA,ANCHO_TARJETA):
+            for y in range(0,CANTIDAD_TARJETAS_V*ALTO_TARJETA,ALTO_TARJETA):
+                if(i > CANTIDAD_TARJETAS_UNICAS):
+                    tarjeta_test = Tarjeta("0{0}.png".format(i-CANTIDAD_TARJETAS_UNICAS), x, y)
+                else:
+                    tarjeta_test = Tarjeta("0{0}.png".format(i), x, y)
+                self.agregar_elemento(tarjeta_test)
+                i = i + 1
+
     def cambiar_tiempo(self, tiempo):
         self.tiempo = tiempo
 
