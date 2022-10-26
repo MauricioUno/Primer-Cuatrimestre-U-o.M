@@ -16,60 +16,46 @@ class Tarjeta:
 
     
     def verificar_colision(self, pos_xy):
-        return self.rect.collidepoint(pos_xy) and not self.visible
-
+        if self.rect.collidepoint(pos_xy) and not self.visible:
+            sonido_voltear.play()
+            self.visible = True
+            
+            
+    def __eq__(self, tarjeta):
+        return self.path_imagen == tarjeta.path_imagen
+    
+    def comparar_tarjetas(self, tarjeta):
+        if self == tarjeta:
+            self.descubierto = True
+            tarjeta.descubierto = True
+            sonido_clic.play()
+        else:
+            self.visible=False
+            tarjeta.visible=False
+            sonido_equivocado.play()
 
 
 class Tablero:
     
     def __init__(self) -> None:
         self.lista_tarjetas = []
+        self.cargar_tarjetas()
+        self.mezclar_posicion_tarjetas()
         self.tiempo = 0
         self.musica_ganador = False
 
-
-    def agregar_elemento(self, elemento: Tarjeta):
-        self.lista_tarjetas.append(elemento)
 
     def cargar_tarjetas(self):
         i = 1
         for x in range(0,CANTIDAD_TARJETAS_H*ANCHO_TARJETA,ANCHO_TARJETA):
             for y in range(0,CANTIDAD_TARJETAS_V*ALTO_TARJETA,ALTO_TARJETA):
                 if(i > CANTIDAD_TARJETAS_UNICAS):
-                    tarjeta_test = Tarjeta("0{0}.png".format(i-CANTIDAD_TARJETAS_UNICAS), x, y)
+                    tarjeta = Tarjeta("0{0}.png".format(i-CANTIDAD_TARJETAS_UNICAS), x, y)
                 else:
-                    tarjeta_test = Tarjeta("0{0}.png".format(i), x, y)
-                self.agregar_elemento(tarjeta_test)
+                    tarjeta = Tarjeta("0{0}.png".format(i), x, y)
+                self.lista_tarjetas.append(tarjeta)
                 i = i + 1
 
-    def cambiar_tiempo(self, tiempo):
-        self.tiempo = tiempo
-
-    def contar_tarjetas_descubiertas(self):
-        return reduce(lambda acumulador, tarjeta : acumulador + 1 if tarjeta.descubierto else acumulador, self.lista_tarjetas, 0)
-
-    def contar_tarjetas_visibles_no_descubiertas(self): 
-        return reduce(lambda acumulador, tarjeta : acumulador + 1 if tarjeta.visible and not tarjeta.descubierto else acumulador, self.lista_tarjetas, 0)
-
-    def comprobar_par_descubierto(self):
-        tarjetas = list(filter(lambda tarjeta : tarjeta.visible and not tarjeta.descubierto, self.lista_tarjetas))
-        if len(tarjetas) == 2:
-            if tarjetas[0].path_imagen == tarjetas[1].path_imagen:
-                tarjetas[0].descubierto = True
-                tarjetas[1].descubierto = True
-                sonido_clic.play()
-            else:
-                sonido_equivocado.play()
-
-
-    def verificar_juego_terminado(self):
-        return self.contar_tarjetas_descubiertas() == len(self.lista_tarjetas)
-
-    def verificar_musica_ganador(self):
-        if not self.musica_ganador:
-            sonido_fondo.stop()
-            sonido_ganador.play(-1)
-            self.musica_ganador = True
 
     def mezclar_posicion_tarjetas(self):
         lista_rectangulos = list(map(lambda tarjeta : tarjeta.rect, self.lista_tarjetas))
@@ -79,11 +65,53 @@ class Tablero:
             tarjeta.rect = rectangulo
 
 
+    def contar_tarjetas_descubiertas(self):
+        return reduce(lambda acumulador, tarjeta : acumulador + 1 if tarjeta.descubierto else acumulador, self.lista_tarjetas, 0)
+
+
+    def contar_tarjetas_visibles_no_descubiertas(self): 
+        return reduce(lambda acumulador, tarjeta : acumulador + 1 if tarjeta.visible and not tarjeta.descubierto else acumulador, self.lista_tarjetas, 0)
+
+
+    def comparar_par_visible_no_descubierto(self):
+        '''
+        Solo se llama a este metodo cuando la cantidad de tarjetas visibles no descubiertas en la lista es igual a 2
+        '''
+        lista_tarjetas = list(filter(lambda tarjeta : tarjeta.visible and not tarjeta.descubierto, self.lista_tarjetas))
+        lista_tarjetas[0].comparar_tarjetas(lista_tarjetas[1])
+
+
+    def colision(self, pos_xy):
+        if (self.contar_tarjetas_visibles_no_descubiertas() < 2):
+            for tarjeta in self.lista_tarjetas:
+                tarjeta.verificar_colision(pos_xy)
+                if (self.contar_tarjetas_visibles_no_descubiertas() == 2):
+                    self.tiempo = pygame.time.get_ticks()
+                    
+
+    def update(self):
+        tiempo_actual = pygame.time.get_ticks()
+        if self.tiempo > 0 and tiempo_actual - self.tiempo > 500:
+            self.comparar_par_visible_no_descubierto()
+            self.tiempo = 0
+                    
+    def verificar_juego_terminado(self):
+        return self.contar_tarjetas_descubiertas() == len(self.lista_tarjetas)
+
+
+    def cambiar_musica_ganador(self):
+        if not self.musica_ganador:
+            sonido_fondo.stop()
+            sonido_ganador.play(-1)
+            self.musica_ganador = True
+
+
+
 class Texto:
 
     def __init__(self) -> None:
         self.font = pygame.font.SysFont("Arial Narrow", ALTO_TEXTO)
-        self.tiempo = ""
+        self.tiempo = self.font.render("Tiempo: {0:02d}:{1:02d}".format(0, 0), True, (255, 0, 0))
         self.juego_terminado = self.font.render("Juego terminado!", True, (255, 0, 0))
 
     
