@@ -117,3 +117,11 @@ class Texto:
     
     def actualizar_tiempo(self, minutos, segundos):
         self.tiempo = self.font.render("Tiempo: {0:02d}:{1:02d}".format(minutos, segundos), True, (255, 0, 0))
+
+
+
+class Imagen:
+
+    def __init__(self) -> None:
+        self.juego_iniciado = pygame.image.load(PATH_RECURSOS + "\imagen_fondo.jpg")
+        self.juego_no_iniciado = pygame.image.load(PATH_RECURSOS + "\imagen_start.jpg")

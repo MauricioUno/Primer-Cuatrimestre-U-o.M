@@ -17,8 +17,8 @@ pygame.time.set_timer(tiempo_de_inicio,3000)
 
 tablero_juego = Tablero()
 textos_juego = Texto()
+imagen_juego = Imagen()
 
-imagen_fondo = pygame.image.load(PATH_RECURSOS + "\imagen_fondo.jpg")
 sonido_fondo.play(-1)
 
 segundos = 0
@@ -50,7 +50,7 @@ while running:
                 tarjeta.visible = not juego_iniciado   
         
     tablero_juego.update()
-    pantalla_juego.blit(imagen_fondo,(0,0))
+    pantalla_juego.blit(imagen_juego.juego_iniciado,(0,0))
     textos_juego.actualizar_tiempo(minutos, segundos)
     actualizar.render(tablero_juego, pantalla_juego, textos_juego)
 
