@@ -28,6 +28,7 @@ class Jugador:
         self.rect.x = x
         self.rect.y = y
 
+        self.caminando = False
         self.saltando = False
         self.cayendo = False
         self.speed_jump = 10
@@ -35,7 +36,9 @@ class Jugador:
 
 
     def mover(self,direccion):
+
         self.direccion = direccion
+        self.caminando = True
         if self.direccion == "derecha":
             self.move_x = self.speed_walk
             
@@ -44,30 +47,38 @@ class Jugador:
             
 
     def detener(self):
+        self.caminando = False
         self.move_x = 0
 
 
     def saltar(self, saltar):
-
-        if self.rect.y < self.inicio_salto - 150:
-            saltar = False
-
-        if saltar: 
+        if saltar:
             if self.rect.y == 400:
-                self.move_y = -self.speed_jump
                 self.saltando = True
-                self.frame = 0
                 self.inicio_salto = self.rect.y
         else:
-            self.saltando = False
-            self.caer(True)
+            if self.saltando:
+                self.terminar_salto()
+
+
+    def limitar_salto(self):
+        if self.saltando and self.rect.y < self.inicio_salto - 140:
+            self.terminar_salto()
+
+
+    def terminar_salto(self):
+        self.saltando = False
+        self.caer(True)
 
 
     def controlar_movimiento_y(self):
+        if self.saltando:
+            self.move_y = -self.speed_jump
 
-        if not self.rect.y < 400 and not self.saltando:
-            #self.rect.y = 400
-            self.caer(False)
+        else:
+            if not self.rect.y < 400:
+                self.rect.y = 400
+                self.caer(False)
 
 
     def caer(self, cayendo):
@@ -78,31 +89,43 @@ class Jugador:
             self.move_y = 0
             self.cayendo = False
 
+
     def animaciones(self):
         
-        if not self.saltando and not self.cayendo:
-            if self.move_x == 0:
-                if self.direccion == "derecha":
-                    self.animacion = self.stay_r
-                elif self.direccion == "izquierda":
-                    self.animacion = self.stay_l
+        if self.saltando or self.cayendo:
 
-            else:
-                if self.move_x == self.speed_walk:
+            if self.animacion != self.jump_r and self.animacion != self.jump_l:
+                self.frame = 0
+
+            if self.direccion == "derecha":
+                self.animacion = self.jump_r
+
+            elif self.direccion == "izquierda":
+
+                self.animacion = self.jump_l
+
+        else:
+            if self.caminando:
+
+                if self.direccion == "derecha":
                     self.animacion = self.walk_r
 
-                elif self.move_x == -self.speed_walk:
-                    self.animacion = self.walk_l                
+                elif self.direccion == "izquierda":
+                    self.animacion = self.walk_l  
+             
+            else:
+                if self.direccion == "derecha":
+                    self.animacion = self.stay_r
+
+                elif self.direccion == "izquierda":
+                    self.animacion = self.stay_l
+                    
 
             if self.animacion != self.animacion_anterior:
                 self.animacion_anterior = self.animacion
                 self.frame = 0
 
-        elif self.saltando or self.cayendo:
-            if self.direccion == "derecha":
-                self.animacion = self.jump_r
-            elif self.direccion == "izquierda":
-                self.animacion = self.jump_l
+            
 
 
     def actualizar_posicion(self):

@@ -33,6 +33,10 @@ while True:
             coco.disparar(jugador.rect)
             batterflies.generar_batterfly()
 
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_SPACE:
+                jugador.saltar(True)
+
         if event.type == pygame.KEYUP:
             if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
                 jugador.detener()
@@ -43,6 +47,7 @@ while True:
     
     teclas_presionadas = pygame.key.get_pressed()
     if True in teclas_presionadas:
+
         if teclas_presionadas[pygame.K_LEFT] and not teclas_presionadas[pygame.K_RIGHT] :
             jugador.mover("izquierda")
 
@@ -53,7 +58,7 @@ while True:
             jugador.detener()
 
         if teclas_presionadas[pygame.K_SPACE]:
-            jugador.saltar(True)
+            jugador.limitar_salto()
                   
                     
 
