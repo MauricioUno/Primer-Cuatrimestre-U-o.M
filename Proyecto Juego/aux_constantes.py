@@ -1,0 +1,7 @@
+ANCHO_VENTANA = 1000
+ALTO_VENTANA = 600
+FPS = 30
+PATH_RECURSOS = r"Proyecto Juego\recursos"
+DERECHA = "right"
+IZQUIERDA = "left"
+COLOR_TEXTO_MENU = 	(240,230,140)

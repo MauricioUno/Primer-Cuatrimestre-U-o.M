@@ -1,0 +1,45 @@
+{
+    "niveles":[
+        {
+            "plataformas":[
+                {"pos_x": -500,
+                "pos_y": 585,
+                "ancho": 2000,
+                "alto": 400
+
+                },
+                
+                {"pos_x": 100,
+                "pos_y": 465,
+                "ancho": 40,
+                "alto": 20
+                },
+                
+                {"pos_x": 330,
+                "pos_y": 325,
+                "ancho": 20,
+                "alto": 10
+                },
+
+                {"pos_x": 800,
+                "pos_y": 355,
+                "ancho": 100,
+                "alto": 20
+                },
+
+                {"pos_x": 500,
+                "pos_y": 205,
+                "ancho": 20,
+                "alto": 10
+                },
+
+                {"pos_x": 770,
+                "pos_y": 155,
+                "ancho": 100,
+                "alto": 20
+                }
+                
+            ]
+        }
+    ]
+}
