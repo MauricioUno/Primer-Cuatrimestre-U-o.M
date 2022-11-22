@@ -2,10 +2,11 @@ from class_texto import *
 from aux_constantes import *
 
 class Menu:
-    def __init__(self, textos, textos_interactivos, imagenes) -> None:
+    def __init__(self, textos, textos_interactivos, imagenes, screen) -> None:
         self.textos = []
         self.textos_interactivos = []
         self.imagenes = []
+        self.screen = screen
         self.agregar_texto(textos)
         self.agregar_texto_interactivo(textos_interactivos)
         self.agregar_imagen(imagenes)
@@ -22,7 +23,7 @@ class Menu:
 
     def agregar_imagen(self, imagenes):
         for imagen in imagenes:
-            aux_imagen = Imagen(imagen["path"], imagen["ancho"], imagen["alto"], imagen["pos_x"], imagen["pos_y"])
+            aux_imagen = Imagen(imagen["path"], imagen["ancho"], imagen["alto"], imagen["pos_x"], imagen["pos_y"], self.screen)
             self.imagenes.append(aux_imagen)
 
     def update(self, screen):
@@ -33,4 +34,4 @@ class Menu:
             texto_interc.draw(screen)
 
         for imagen in self.imagenes:
-            imagen.draw(screen)
+            imagen.draw()
