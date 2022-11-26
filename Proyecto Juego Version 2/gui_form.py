@@ -15,7 +15,12 @@ class Form():
         self.surface = pygame.Surface((w,h))
         self.slave_rect = self.surface.get_rect(x = x, y = y)
         self.active = active
-        self.image_background = imagen_background
+        
+        if imagen_background != None:
+            self.image_background  = pygame.image.load(imagen_background).convert_alpha()
+            self.image_background  = pygame.transform.scale(self.image_background, (self.w, self.h)).convert_alpha()
+        else:
+            self.image_background = None
         
     
     def set_active(self,name):
@@ -32,9 +37,7 @@ class Form():
             pygame.draw.rect(self.surface, self.color_border, self.surface.get_rect(), 2)
              
         if(self.image_background != None):
-            image_background = pygame.image.load(self.image_background).convert_alpha()
-            image_background = pygame.transform.scale(image_background, (self.w, self.h)).convert_alpha()
-            self.surface.blit(image_background, (0,0))
+            self.surface.blit(self.image_background, (0,0))
 
 
     def draw(self, delta_ms):

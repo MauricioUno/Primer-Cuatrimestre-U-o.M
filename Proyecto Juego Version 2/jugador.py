@@ -1,37 +1,39 @@
 from aux_constantes import *
 from aux_frames import Auxiliar
-from class_padre import GrupoDisparosX
+from class_proyectil import GrupoProyectiles
 import pygame
 from gui_progressbar import ProgressBar
 from gui_widget import Widget
 
 class Jugador:
-    def __init__(self, pos_x, pos_y, screen) -> None:
+    def __init__(self, pos_x, pos_y, screen, form) -> None:
         self.screen = screen
         self.direccion = DERECHA
         self.stay = {}
-        self.stay[DERECHA] = Auxiliar.getSurfaceFromSpriteSheet(PATH_RECURSOS + "\caracters\stink\idle_plus.png",26,2)[:51]
-        self.stay[IZQUIERDA] = Auxiliar.getSurfaceFromSpriteSheet(PATH_RECURSOS + "\caracters\stink\idle_plus.png",26,2,True)[:51]
+        self.stay[DERECHA] = Auxiliar.getSurfaceFromSpriteSheet(PATH_RECURSOS + "\players\stink\idle_plus.png",26,2)[:51]
+        self.stay[IZQUIERDA] = Auxiliar.getSurfaceFromSpriteSheet(PATH_RECURSOS + "\players\stink\idle_plus.png",26,2,True)[:51]
         
         self.walk = {}
-        self.walk[DERECHA] = Auxiliar.getSurfaceFromSpriteSheet(PATH_RECURSOS + "\caracters\stink\walk.png",15,1)[:12]
-        self.walk[IZQUIERDA] = Auxiliar.getSurfaceFromSpriteSheet(PATH_RECURSOS + "\caracters\stink\walk.png",15,1,True)[:12]
+        self.walk[DERECHA] = Auxiliar.getSurfaceFromSpriteSheet(PATH_RECURSOS + "\players\stink\walk.png",15,1)[:12]
+        self.walk[IZQUIERDA] = Auxiliar.getSurfaceFromSpriteSheet(PATH_RECURSOS + "\players\stink\walk.png",15,1,True)[:12]
 
         self.jump = {}
-        self.jump[DERECHA] = Auxiliar.getSurfaceFromSpriteSheet(PATH_RECURSOS + "\caracters\stink\jump.png", 33, 1)[:23]
-        self.jump[IZQUIERDA] = Auxiliar.getSurfaceFromSpriteSheet(PATH_RECURSOS + "\caracters\stink\jump.png", 33, 1, True)[:23]
+        self.jump[DERECHA] = Auxiliar.getSurfaceFromSpriteSheet(PATH_RECURSOS + "\players\stink\jump.png", 33, 1)[:23]
+        self.jump[IZQUIERDA] = Auxiliar.getSurfaceFromSpriteSheet(PATH_RECURSOS + "\players\stink\jump.png", 33, 1, True)[:23]
 
         self.fall = {}
-        self.fall[DERECHA] = Auxiliar.getSurfaceFromSpriteSheet(PATH_RECURSOS + "\caracters\stink\jump.png", 33, 1)[22:28]
-        self.fall[IZQUIERDA] = Auxiliar.getSurfaceFromSpriteSheet(PATH_RECURSOS + "\caracters\stink\jump.png", 33, 1, True)[22:28]
+        self.fall[DERECHA] = Auxiliar.getSurfaceFromSpriteSheet(PATH_RECURSOS + "\players\stink\jump.png", 33, 1)[22:28]
+        self.fall[IZQUIERDA] = Auxiliar.getSurfaceFromSpriteSheet(PATH_RECURSOS + "\players\stink\jump.png", 33, 1, True)[22:28]
         
         
         self.animacion = self.stay[self.direccion]
         self.frame = 0
         self.imagen = self.animacion[self.frame]
         self.rect = self.imagen.get_rect(x = pos_x, y = pos_y)
-        self.rect_pies = pygame.Rect(self.rect.x + self.rect.w/3, self.rect.y + self.rect.h -10, self.rect.w/3, 5)
+        self.rect_pies = pygame.Rect(self.rect.x + self.rect.w/3, self.rect.y + self.rect.h -10, self.rect.w/3, 10)
         self.rect_hitbox = pygame.Rect(self.rect.x + 20, self.rect.y + 10, self.rect.w - 30, self.rect.h - 15)
+        self.rect_der = pygame.Rect(self.rect.centerx + 30, self.rect.y, 15, self.rect.h-20)
+        self.rect_izq = pygame.Rect(self.rect.centerx - 30, self.rect.y, 15, self.rect.h-20)
         self.move_x = 0
         self.move_y = 0
 
@@ -48,13 +50,16 @@ class Jugador:
         self.gravedad = 10
         self.inicio_salto = self.rect_pies.y
 
+        self.move_allowed = {}
+        self.move_allowed[DERECHA] = True
+        self.move_allowed[IZQUIERDA] = True
 
         self.speed_shoot = {}
         self.speed_shoot[DERECHA] = 20
         self.speed_shoot[IZQUIERDA] = -20
-        self.orb = Auxiliar.getSurfaceFromSpriteSheet(PATH_RECURSOS + r"\caracters\stink\disparo_animacion.png",16,2)[:31]
-        self.municion = 30
-        self.proyectiles = GrupoDisparosX(self, self.screen)
+        self.orb = Auxiliar.getSurfaceFromSpriteSheet(PATH_RECURSOS + r"\players\stink\disparo_animacion.png",16,2)[:31]
+        self.municion = 10
+        self.proyectiles = GrupoProyectiles(self, self.screen)
         self.timer_disparo = 0
         self.shoot_allowed = True
 
@@ -62,26 +67,33 @@ class Jugador:
         self.invulnerable = False
         self.golpeado = False
         self.hitted = {}
-        self.hitted[DERECHA] = Auxiliar.getSurfaceFromSpriteSheet(PATH_RECURSOS + r"\caracters\stink\surprise.png",21,1)[:13]
-        self.hitted[IZQUIERDA] = Auxiliar.getSurfaceFromSpriteSheet(PATH_RECURSOS + r"\caracters\stink\surprise.png",21,1, True)[:13]
+        self.hitted[DERECHA] = Auxiliar.getSurfaceFromSpriteSheet(PATH_RECURSOS + r"\players\stink\surprise.png",21,1)[:13]
+        self.hitted[IZQUIERDA] = Auxiliar.getSurfaceFromSpriteSheet(PATH_RECURSOS + r"\players\stink\surprise.png",21,1, True)[:13]
         self.timer_invulnerable = 0
         self.timer = 0
 
         self.vida = 100
         self.vivo = True
         self.death = {}
-        self.death[DERECHA] = Auxiliar.getSurfaceFromSpriteSheet(PATH_RECURSOS +  r"\caracters\stink\angry.png",20,1,False, repeat_frame=2)[8:26]
-        self.death[IZQUIERDA] = Auxiliar.getSurfaceFromSpriteSheet(PATH_RECURSOS +  r"\caracters\stink\angry.png",20,1,True,repeat_frame=2)[8:26]
+        self.death[DERECHA] = Auxiliar.getSurfaceFromSpriteSheet(PATH_RECURSOS +  r"\players\stink\angry.png",20,1,False, repeat_frame=2)[8:26]
+        self.death[IZQUIERDA] = Auxiliar.getSurfaceFromSpriteSheet(PATH_RECURSOS +  r"\players\stink\angry.png",20,1,True,repeat_frame=2)[8:26]
         self.activo = True
         self.score = 0
 
+        self.layer_orb = Widget(master_form=form, x=10, y = 40, w=25, h=25, color_background= None, color_border=None, image_background=PATH_RECURSOS + "\items\orb.png",text = None,font=None,font_size=None,font_color=None)
+        self.layer_ammo = Widget(master_form=form, x=50, y = 40, w=50, h=25, color_background= C_CELEST, color_border=C_BLUE, image_background=None,text=" ",font="Arial",font_size=25,font_color=C_BLUE_2)
+        self.layer_score = Widget(master_form=form, x=1390, y = 10, w=100, h=30, color_background=C_YELLOW_2, color_border=C_BROWN, image_background=None, text=" ", font="Arial", font_size=30, font_color=C_BLACK)
+        self.pb1 = ProgressBar(master=form,x=10,y=10,w=350,h=20,color_background=M_BRIGHT_CLICK,color_border=C_WHITE, value_max = self.vida)
+        self.lista_widget = [self.pb1, self.layer_orb, self.layer_ammo,self.layer_score]
+
+        self.is_on_portal = False
 
     def mover(self,direccion):
         if not self.golpeado:
             self.direccion = direccion
             self.caminando = True
-            self.move_x = self.speed_walk[self.direccion]
-            
+            if self.move_allowed[self.direccion]:
+                self.move_x = self.speed_walk[self.direccion]
             
     def detener(self):
         if not self.golpeado:
@@ -111,14 +123,30 @@ class Jugador:
             self.sobre_plataforma = False
             for plataforma in plataformas:
                 if self.rect_pies.colliderect(plataforma.rect_piso):
-
-                    if self.caminando:
-                        self.move_x = self.speed_walk[self.direccion] + plataforma.move_x
-                    else:
-                        self.move_x = plataforma.move_x
+                    self.move_y = plataforma.move_y
                     self.sobre_plataforma = True
+                    if self.move_allowed[self.direccion]:
+                        if self.caminando:
+                            self.move_x = self.speed_walk[self.direccion] + plataforma.move_x
+                        else:
+                            self.move_x = plataforma.move_x
+                        
                     break
-            
+
+    
+    def verificar_paredes(self, plataformas):
+        self.move_allowed[DERECHA] = True
+        self.move_allowed[IZQUIERDA]= True
+
+        for plataforma in plataformas:
+            if plataforma.terreno:
+                if self.rect_izq.colliderect(plataforma.rect) and self.move_allowed[IZQUIERDA]:
+                    self.move_allowed[IZQUIERDA] = False
+                    self.move_x = 0
+                
+                if self.rect_der.colliderect(plataforma) and self.move_allowed[DERECHA]:
+                    self.move_allowed[DERECHA] = False
+                    self.move_x = 0
 
 
     def aplicar_gravedad(self):
@@ -127,14 +155,13 @@ class Jugador:
                 self.move_y = self.gravedad
                 self.cayendo = True
             else:
-                self.move_y = 0
                 self.cayendo = False
 
 
     def disparar(self):
         if self.municion > 0 and not self.golpeado and self.shoot_allowed:
             self.shoot_allowed = False  
-            self.proyectiles.agregar_disparo(self.rect.centerx, self.rect.centery, self.speed_shoot[self.direccion], 0, 0, 30, 30, self.orb, 10)
+            self.proyectiles.agregar_disparo(self.rect.centerx, self.rect.centery, self.speed_shoot[self.direccion], 0, 0, 30, 30, self.orb, 300)
             self.municion -= 1
 
     def cooldown_disparo(self, delta_ms):
@@ -210,6 +237,10 @@ class Jugador:
         self.rect_pies.y += self.move_y
         self.rect_hitbox.x += self.move_x
         self.rect_hitbox.y += self.move_y
+        self.rect_der.x += self.move_x
+        self.rect_der.y += self.move_y
+        self.rect_izq.x += self.move_x
+        self.rect_izq.y += self.move_y
 
 
     def updatear_frames(self):
@@ -245,36 +276,31 @@ class Jugador:
                 if event.key == pygame.K_z:
                     self.disparar()
 
-            if event.type == pygame.KEYUP:
-                if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
-                    self.detener()
+                    
 
-                if event.key == pygame.K_SPACE:
-                    self.saltar(False)
+        if teclas_presionadas[pygame.K_LEFT] and not teclas_presionadas[pygame.K_RIGHT] :
+            self.mover(IZQUIERDA)
+
+        elif teclas_presionadas[pygame.K_RIGHT] and not teclas_presionadas[pygame.K_LEFT] :
+            self.mover(DERECHA)
+        
+        else:
+            self.detener()
 
 
-        if True in teclas_presionadas:
-
-            if teclas_presionadas[pygame.K_LEFT] and not teclas_presionadas[pygame.K_RIGHT] :
-                self.mover(IZQUIERDA)
-
-            elif teclas_presionadas[pygame.K_RIGHT] and not teclas_presionadas[pygame.K_LEFT] :
-                self.mover(DERECHA)
-
-            elif teclas_presionadas[pygame.K_RIGHT] and teclas_presionadas[pygame.K_LEFT]:
-                self.detener()
-
-            if teclas_presionadas[pygame.K_SPACE]:
-                self.limitar_salto()
+        if teclas_presionadas[pygame.K_SPACE]:
+            self.limitar_salto()
+        else:
+            self.saltar(False)
 
     
 
     def actualizar(self, plataformas, objetivos, delta_ms, lista_eventos, teclas_presionadas):
         if self.activo:
             self.timer += delta_ms
-            print(delta_ms)
             if self.timer > 30:
                 self.timer = 0
+                self.verificar_paredes(plataformas)
                 self.controles(lista_eventos, teclas_presionadas)
                 self.verificar_plataforma(plataformas)
                 self.aplicar_gravedad()
@@ -286,6 +312,14 @@ class Jugador:
                 self.cooldown_invulnerabilidad(delta_ms)
                 self.cooldown_disparo(delta_ms)
                 self.draw()
+        
+        self.pb1.value = self.vida
+        self.layer_ammo.text = "{0}".format(self.municion)
+        self.layer_score.text = "{0}".format(self.score)
+        
+        for widget in self.lista_widget:
+            widget.update(lista_eventos)
+            widget.draw()
 
         
 

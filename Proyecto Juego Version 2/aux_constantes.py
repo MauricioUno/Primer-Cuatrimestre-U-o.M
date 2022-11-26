@@ -1,4 +1,4 @@
-ANCHO_VENTANA = 1200
+ANCHO_VENTANA = 1500
 ALTO_VENTANA = 720
 FPS = 30
 PATH_RECURSOS = r"Proyecto Juego Version 2\recursos"

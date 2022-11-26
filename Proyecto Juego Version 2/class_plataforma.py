@@ -1,47 +1,68 @@
 import pygame
 from aux_constantes import *
-
-class Imagen:
-    def __init__(self, path_imagen, ancho, alto, pos_x, pos_y, screen) -> None:
-        self.imagen = pygame.image.load(PATH_RECURSOS + path_imagen).convert_alpha()
-        self.imagen = pygame.transform.scale(self.imagen, (ancho, alto)).convert_alpha()
-        self.rect = self.imagen.get_rect(x = pos_x, y = pos_y)
-        self.screen = screen
-
-    
-    def draw(self):
-        self.screen.blit(self.imagen, self.rect)
+from class_A import Imagen
 
 
 class Plataforma(Imagen):
-    def __init__(self, pos_x, pos_y, ancho, alto, path_imagen, speed_x, speed_y, screen) -> None:
-        super().__init__(path_imagen, ancho, alto, pos_x, pos_y, screen)
-        self.rect_piso = pygame.Rect(self.rect.x, self.rect.y, self.rect.w, 5)
-        self.existente = True
+    def __init__(self, pos_x, pos_y, ancho, alto, tipo, terreno, screen) -> None:
+        super().__init__("/tile/{0}.png".format(tipo), ancho, alto, pos_x, pos_y, screen)
+        self.rect_piso = pygame.Rect(self.rect.x, self.rect.y, self.rect.w, 10)
+        self.terreno = terreno
+        self.move_x = 0
+        self.move_y = 0
+        self.timer = 0
+        
+
+    def actualizar_plataforma(self, delta_ms):
+        self.timer += delta_ms
+        if self.timer > 30:
+            self.timer = 0
+            self.draw()
+
+
+
+
+class PlataformaMovil(Plataforma):
+    def __init__(self, pos_x, pos_y, ancho, alto, tipo, speed_x, speed_y, ruta, terreno, screen) -> None:
+        super().__init__(pos_x, pos_y, ancho, alto, tipo, terreno, screen)
         self.speed_x = speed_x
         self.speed_y = speed_y
         self.move_x = self.speed_x
         self.move_y = self.speed_y
         self.minimo_x = self.rect.x
         self.minimo_y = self.rect.y
-        self.maximo_x = self.minimo_x + 300
-        self.maximo_y = self.minimo_y + 200
+        self.maximo_x = self.minimo_x + ruta
+        self.maximo_y = self.minimo_y - ruta
         self.avanzando = True
-        self.timer = 0
-
+        self.subiendo = True
 
 
     def controlar_movimiento_x(self):
         if self.avanzando:
             if self.rect.x < self.maximo_x:
                 self.move_x = self.speed_x
+                self.direccion = DERECHA
             else:
                 self.avanzando = False        
         else:
             if self.rect.x > self.minimo_x:
                 self.move_x = -self.speed_x
+                self.direccion = IZQUIERDA
             else:
                 self.avanzando = True
+
+
+    def controlar_movimiento_y(self):
+        if self.subiendo:
+            if self.rect.y > self.maximo_y:
+                self.move_y = -self.speed_y
+            else:
+                self.subiendo = False        
+        else:
+            if self.rect.y < self.minimo_y:
+                self.move_y = self.speed_y
+            else:
+                self.subiendo = True
 
 
     def actualizar_posicion(self):
@@ -51,28 +72,52 @@ class Plataforma(Imagen):
         self.rect_piso.y += self.move_y
 
 
-
     def actualizar_plataforma(self, delta_ms):
         self.timer += delta_ms
         if self.timer > 30:
             self.timer = 0
             self.controlar_movimiento_x()
+            self.controlar_movimiento_y()
             self.actualizar_posicion()
             self.draw()
 
 
 
-class GrupoPlataformas:
-    def __init__(self,lista_plataformas, screen) -> None:
+
+
+class ListaPlataformas:
+    def __init__(self,lista_plataformas, screen, name) -> None:
         self.lista = []
         self.screen = screen
-        self.agregar_plataforma(lista_plataformas)
+        self.name = name
 
-    def agregar_plataforma(self, lista_datos: list[dict]):
-        for datos in lista_datos:
-            plataforma = Plataforma(datos["pos_x"], datos["pos_y"], datos["ancho"], datos["alto"], r"\tile\grass.png", datos["speed_x"], datos["speed_y"], self.screen)
+        if "terreno" in lista_plataformas.keys():
+            self.agregar_plataforma(lista_plataformas["terreno"])
+
+
+        if "moviles" in lista_plataformas.keys():
+            self.agregar_plataforma_movil(lista_plataformas["moviles"])
+
+    def agregar_plataforma(self, lista_plataformas):
+        for dato in lista_plataformas:
+            pos_y = dato["pos"][1]
+            ancho = dato["dim"][0]
+            alto = dato["dim"][1]
+            for y in range(dato["qty"][1]):
+                pos_x = dato["pos"][0]
+                for x in range(dato["qty"][0]):
+                    tile = "{0}/{1}".format(self.name, dato["tipo"])
+                    plataforma = Plataforma(pos_x, pos_y, ancho, alto, tile, dato["colision"], self.screen)
+                    self.lista.append(plataforma)
+                    pos_x += ancho
+                pos_y += alto
+
+
+    def agregar_plataforma_movil(self, lista_plataformas):
+        for dato in lista_plataformas:
+            tile = "{0}/{1}".format(self.name, dato["tipo"])
+            plataforma = PlataformaMovil(dato["pos"][0], dato["pos"][1], dato["dim"][0], dato["dim"][1], tile, dato["move"][0], dato["move"][1], dato["route"],0, self.screen)
             self.lista.append(plataforma)
-
 
     def actualizar(self, delta_ms):
         for plataforma in self.lista:

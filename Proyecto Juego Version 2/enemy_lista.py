@@ -1,30 +1,37 @@
 from enemy_groodle import SpiritGroodle
 from enemy_ix import SpiritIx
-from enemy_batterflies import GrupoBatterflies
+from enemy_dust import Dust
 from aux_constantes import *
 
 
-class ListaEnemiesNivelUno:
-    def __init__(self, screen) -> None:
-        self.master_screen = screen
-        self.groodle = SpiritGroodle(790, 330, IZQUIERDA, self.master_screen)
-        self.ix = SpiritIx(500, 610, DERECHA, 10, 200, 700, self.master_screen)
-        self.batterflies = GrupoBatterflies(3, self.master_screen)
-
-
-    def actualizar(self, jugador, delta_ms):
+class ListaEnemigos:
+    def __init__(self, lista_enemigos, screen) -> None:
         self.lista = []
 
-        self.groodle.actualizar(jugador, delta_ms)
-        if self.groodle.activo:
-            self.lista.append(self.groodle)
-            
-        self.ix.actualizar(jugador, delta_ms)
-        if self.ix.activo:
-            self.lista.append(self.ix)
-            
-        self.batterflies.actualizar(jugador, delta_ms)
-        for batterfly in self.batterflies.lista_batterflies:
-            self.lista.append(batterfly)
+        if "ix" in lista_enemigos.keys():
+            self.agregar_spirit_ix(lista_enemigos["ix"], screen)
 
+        if "groodle" in lista_enemigos.keys():
+            self.agregar_spirit_groodle(lista_enemigos["groodle"], screen)
+
+        
+
+
+    def actualizar(self, jugador, delta_ms):     
+        for enemigo in self.lista:
+            enemigo.actualizar(jugador, delta_ms)
+            if not enemigo.activo:
+                self.lista.remove(enemigo)    
+
+
+    def agregar_spirit_groodle(self, lista_groodle, screen):
+        for groodle in lista_groodle:
+            enemigo_groodle = SpiritGroodle(groodle["coordenadas"][0], groodle["coordenadas"][1], groodle["direccion"], screen)
+            self.lista.append(enemigo_groodle)
+
+
+    def agregar_spirit_ix(self, lista_ix, screen):
+        for ix in lista_ix:
+            enemigo_ix = SpiritIx(ix["coordenadas"][0], ix["coordenadas"][1], ix["width_ruta"], screen)
+            self.lista.append(enemigo_ix)
         

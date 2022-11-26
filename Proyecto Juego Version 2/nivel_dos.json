@@ -1,0 +1,27 @@
+{
+    "nivel_dos":[
+        {
+            "background": "/background/space.jpg",
+            "pos_player": [0,405],
+            "pos_portal": [1300,500],
+            "plataformas":
+            {
+                "terreno":
+                [
+                    {
+                        "tipo": "2",
+                        "pos": [-490,660],
+                        "dim": [100,100],
+                        "qty": [11,1],
+                        "colision": 1
+                    }
+                ]
+            },
+            "enemigos":
+            {
+            },
+            "items":{
+            }
+        }
+    ]
+}

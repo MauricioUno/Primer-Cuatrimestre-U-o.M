@@ -1,7 +1,8 @@
 from aux_constantes import *
 from aux_frames import Auxiliar
 import pygame
-from class_padre import *
+from class_A import ObjetoAnimado
+from class_proyectil import GrupoProyectiles
 
 class SpiritGroodle(ObjetoAnimado):
 
@@ -9,14 +10,14 @@ class SpiritGroodle(ObjetoAnimado):
         self.screen = screen
         self.direccion = direccion
         self.stay = {}
-        self.stay[IZQUIERDA] = Auxiliar.getSurfaceFromSpriteSheet(PATH_RECURSOS + r"\inhabitants\coco_fantasma\stay.png",9,10, False, 1, True, 100, 130)[:85]
-        self.stay[DERECHA] = Auxiliar.getSurfaceFromSpriteSheet(PATH_RECURSOS + r"\inhabitants\coco_fantasma\stay.png",9,10, True, 1, True, 100, 130)[:85]
+        self.stay[IZQUIERDA] = Auxiliar.getSurfaceFromSpriteSheet(PATH_RECURSOS + r"\enemies\groodle\stay.png",9,10, False, 1, True, 100, 130)[:85]
+        self.stay[DERECHA] = Auxiliar.getSurfaceFromSpriteSheet(PATH_RECURSOS + r"\enemies\groodle\stay.png",9,10, True, 1, True, 100, 130)[:85]
 
         self.attack = {}
-        self.attack[IZQUIERDA] = Auxiliar.getSurfaceFromSpriteSheet(PATH_RECURSOS + r"\inhabitants\coco_fantasma\attack.png",9,2, False, 1, True, 100, 130)[:17]
-        self.attack[DERECHA] = Auxiliar.getSurfaceFromSpriteSheet(PATH_RECURSOS + r"\inhabitants\coco_fantasma\attack.png",9,2, True, 1, True, 100, 130)[:17]
+        self.attack[IZQUIERDA] = Auxiliar.getSurfaceFromSpriteSheet(PATH_RECURSOS + r"\enemies\groodle\attack.png",9,2, False, 1, True, 100, 130)[:17]
+        self.attack[DERECHA] = Auxiliar.getSurfaceFromSpriteSheet(PATH_RECURSOS + r"\enemies\groodle\attack.png",9,2, True, 1, True, 100, 130)[:17]
         
-        self.animacion_disparo = Auxiliar.getSurfaceFromSpriteSheet(PATH_RECURSOS + r"\inhabitants\coco_fantasma\proyectil.png",10,2)
+        self.animacion_disparo = Auxiliar.getSurfaceFromSpriteSheet(PATH_RECURSOS + r"\enemies\groodle\proyectil.png",10,2)
         super().__init__(self.stay[self.direccion], pos_x, pos_y, self.screen)
         self.rect_hitbox = pygame.Rect(pos_x + 15, pos_y + 30, 70, 70)
 
@@ -31,7 +32,7 @@ class SpiritGroodle(ObjetoAnimado):
         self.damage = 30
         self.vida = 150
         self.puntos = 500
-        self.proyectiles = GrupoDisparosX(self, self.screen)
+        self.proyectiles = GrupoProyectiles(self, self.screen)
         self.atacando = False
         self.timer = 0
         self.shoot_allowed = True
@@ -52,7 +53,7 @@ class SpiritGroodle(ObjetoAnimado):
     def actualizar_cooldown_disparo(self, delta_ms):
         if not self.shoot_allowed:
             self.timer_disparo += delta_ms
-            if self.timer_disparo > 650:
+            if self.timer_disparo > 750:
                 self.timer_disparo = 0
                 self.shoot_allowed = True
 

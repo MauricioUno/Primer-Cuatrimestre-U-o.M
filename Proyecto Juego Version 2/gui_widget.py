@@ -21,7 +21,7 @@ class Widget:
         self.text = text
         if(self.text != None):
             self.text = text
-            self.font_sys = pygame.font.Font(r"Proyecto Juego\recursos\imagenes\Auxiliar\JingleBalonsGTDemo.ttf", font_size)
+            self.font_sys = pygame.font.Font(PATH_RECURSOS + r"\Auxiliar\JingleBalonsGTDemo.ttf", font_size)
             self.font_color = font_color  
 
 
@@ -47,8 +47,10 @@ class Widget:
         if self.color_border:
             pygame.draw.rect(self.slave_surface, self.color_border, self.slave_surface.get_rect(), 2)
 
+
     def update(self, lista_eventos):
         self.render()
+
 
     def draw(self):
         self.master_form.surface.blit(self.slave_surface,self.slave_rect)
