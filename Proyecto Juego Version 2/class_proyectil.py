@@ -21,7 +21,7 @@ class Proyectil(ObjetoAnimado):
 
     def verificar_colision(self,objetivos):
         for objetivo in objetivos:
-            if self.rect_hitbox.colliderect(objetivo.rect_hitbox) and objetivo.activo:
+            if self.rect_hitbox.colliderect(objetivo.rect_hitbox) and objetivo.vida > 0:
                 objetivo.recibir_golpe(self)
                 self.activo = False
 

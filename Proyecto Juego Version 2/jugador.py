@@ -2,11 +2,10 @@ from aux_constantes import *
 from aux_frames import Auxiliar
 from class_proyectil import GrupoProyectiles
 import pygame
-from gui_progressbar import ProgressBar
-from gui_widget import Widget
 
 class Jugador:
     def __init__(self, pos_x, pos_y, screen, form) -> None:
+        self.form = form
         self.screen = screen
         self.direccion = DERECHA
         self.stay = {}
@@ -30,10 +29,11 @@ class Jugador:
         self.frame = 0
         self.imagen = self.animacion[self.frame]
         self.rect = self.imagen.get_rect(x = pos_x, y = pos_y)
-        self.rect_pies = pygame.Rect(self.rect.x + self.rect.w/3, self.rect.y + self.rect.h -10, self.rect.w/3, 10)
+        self.rect_pies = pygame.Rect(self.rect.centerx - self.rect.w/4, self.rect.y + self.rect.h -10, self.rect.w/2 + 5, 10)
+        self.rect_cabeza = pygame.Rect(self.rect.centerx - self.rect.w/4, self.rect.y + 10, self.rect.w/2 + 5, 10)
         self.rect_hitbox = pygame.Rect(self.rect.x + 20, self.rect.y + 10, self.rect.w - 30, self.rect.h - 15)
-        self.rect_der = pygame.Rect(self.rect.centerx + 30, self.rect.y, 15, self.rect.h-20)
-        self.rect_izq = pygame.Rect(self.rect.centerx - 30, self.rect.y, 15, self.rect.h-20)
+        self.rect_der = pygame.Rect(self.rect.centerx + 30, self.rect.y + 20, 10, self.rect.h-37)
+        self.rect_izq = pygame.Rect(self.rect.centerx - 30, self.rect.y +20, 10, self.rect.h-37)
         self.move_x = 0
         self.move_y = 0
 
@@ -79,14 +79,9 @@ class Jugador:
         self.death[IZQUIERDA] = Auxiliar.getSurfaceFromSpriteSheet(PATH_RECURSOS +  r"\players\stink\angry.png",20,1,True,repeat_frame=2)[8:26]
         self.activo = True
         self.score = 0
-
-        self.layer_orb = Widget(master_form=form, x=10, y = 40, w=25, h=25, color_background= None, color_border=None, image_background=PATH_RECURSOS + "\items\orb.png",text = None,font=None,font_size=None,font_color=None)
-        self.layer_ammo = Widget(master_form=form, x=50, y = 40, w=50, h=25, color_background= C_CELEST, color_border=C_BLUE, image_background=None,text=" ",font="Arial",font_size=25,font_color=C_BLUE_2)
-        self.layer_score = Widget(master_form=form, x=1390, y = 10, w=100, h=30, color_background=C_YELLOW_2, color_border=C_BROWN, image_background=None, text=" ", font="Arial", font_size=30, font_color=C_BLACK)
-        self.pb1 = ProgressBar(master=form,x=10,y=10,w=350,h=20,color_background=M_BRIGHT_CLICK,color_border=C_WHITE, value_max = self.vida)
-        self.lista_widget = [self.pb1, self.layer_orb, self.layer_ammo,self.layer_score]
-
         self.is_on_portal = False
+        self.win = False
+        self.lose = False
 
     def mover(self,direccion):
         if not self.golpeado:
@@ -132,6 +127,10 @@ class Jugador:
                             self.move_x = plataforma.move_x
                         
                     break
+        else:
+            for plataforma in plataformas:
+                if self.rect_cabeza.colliderect(plataforma.rect) and plataforma.terreno:
+                    self.saltando = False
 
     
     def verificar_paredes(self, plataformas):
@@ -174,7 +173,7 @@ class Jugador:
 
     def recibir_golpe(self, atacante):
         if not self.invulnerable:
-            self.modificar_vida(atacante)
+            self.modificar_vida(-atacante.damage)
             self.golpeado = True
             self.invulnerable = True
             self.saltando = False
@@ -183,8 +182,8 @@ class Jugador:
             self.move_y = -2
             
             
-    def modificar_vida(self,atacante):
-        self.vida += -atacante.damage
+    def modificar_vida(self,modificacion):
+        self.vida += modificacion
         if self.vida < 1:
             self.vivo = False
 
@@ -199,7 +198,7 @@ class Jugador:
 
     def verificar_colision_enemigos(self,enemigos):
         for enemigo in enemigos:
-            if self.rect_hitbox.colliderect(enemigo.rect_hitbox):
+            if self.rect_hitbox.colliderect(enemigo.rect_hitbox) and enemigo.vida > 0:
                 self.recibir_golpe(enemigo)
 
 
@@ -235,6 +234,8 @@ class Jugador:
         self.rect.y += self.move_y
         self.rect_pies.x += self.move_x
         self.rect_pies.y += self.move_y
+        self.rect_cabeza.x += self.move_x
+        self.rect_cabeza.y += self.move_y
         self.rect_hitbox.x += self.move_x
         self.rect_hitbox.y += self.move_y
         self.rect_der.x += self.move_x
@@ -262,8 +263,11 @@ class Jugador:
     
     def draw(self):
         self.imagen = self.animacion[self.frame]
-        self.screen.blit(self.imagen,self.rect)
-    
+        self.form.surface.blit(self.imagen,self.rect)
+        pygame.draw.rect(self.form.surface, C_BLACK, self.rect_cabeza)
+        pygame.draw.rect(self.form.surface, C_BLACK, self.rect_pies)
+        pygame.draw.rect(self.form.surface, C_BLACK, self.rect_der)
+        pygame.draw.rect(self.form.surface, C_BLACK, self.rect_izq)
 
     def controles(self, lista_eventos, teclas_presionadas):
         
@@ -275,6 +279,10 @@ class Jugador:
 
                 if event.key == pygame.K_z:
                     self.disparar()
+
+                if event.key == pygame.K_a:
+                    if self.is_on_portal:
+                        self.win = True
 
                     
 
@@ -293,6 +301,10 @@ class Jugador:
         else:
             self.saltar(False)
 
+
+    def verificar_limite_y(self):
+        if self.rect_pies.y > ALTO_VENTANA + 200:
+            self.modificar_vida(-100)
     
 
     def actualizar(self, plataformas, objetivos, delta_ms, lista_eventos, teclas_presionadas):
@@ -311,15 +323,10 @@ class Jugador:
                 self.verificar_colision_enemigos(objetivos)
                 self.cooldown_invulnerabilidad(delta_ms)
                 self.cooldown_disparo(delta_ms)
+                self.verificar_limite_y()
                 self.draw()
-        
-        self.pb1.value = self.vida
-        self.layer_ammo.text = "{0}".format(self.municion)
-        self.layer_score.text = "{0}".format(self.score)
-        
-        for widget in self.lista_widget:
-            widget.update(lista_eventos)
-            widget.draw()
+        else:
+            self.lose = True
 
         
 

@@ -1,6 +1,6 @@
 from enemy_groodle import SpiritGroodle
 from enemy_ix import SpiritIx
-from enemy_dust import Dust
+from enemy_batterflies import Batterfly
 from aux_constantes import *
 
 
@@ -13,6 +13,9 @@ class ListaEnemigos:
 
         if "groodle" in lista_enemigos.keys():
             self.agregar_spirit_groodle(lista_enemigos["groodle"], screen)
+
+        if "batterfly" in lista_enemigos.keys():
+            self.agregar_batterfly(lista_enemigos["batterfly"]["cant"], screen)
 
         
 
@@ -34,4 +37,10 @@ class ListaEnemigos:
         for ix in lista_ix:
             enemigo_ix = SpiritIx(ix["coordenadas"][0], ix["coordenadas"][1], ix["width_ruta"], screen)
             self.lista.append(enemigo_ix)
+
+
+    def agregar_batterfly(self, cantidad, screen):
+        for i in range(cantidad):
+            batterfly = Batterfly(screen)
+            self.lista.append(batterfly)
         

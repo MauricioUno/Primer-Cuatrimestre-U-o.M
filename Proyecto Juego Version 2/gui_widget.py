@@ -3,8 +3,9 @@ from pygame.locals import *
 from aux_constantes import *
 
 class Widget:
-    def __init__(self,master_form,x,y,w,h,color_background,color_border,image_background,text,font,font_size,font_color):
-        self.master_form = master_form
+    def __init__(self,master,x,y,w,h,color_background = None,color_border = None,image_background=None,text=None,font_size=None,font_color=None, center = True):
+        self.center = center
+        self.master_form = master
         self.x = x
         self.y = y
         self.w = w
@@ -12,6 +13,7 @@ class Widget:
         self.color_background = color_background
         self.color_border = color_border
 
+        
         self.image_background = image_background
         if self.image_background != None:
             self.image_background = pygame.image.load(image_background).convert_alpha()
@@ -22,7 +24,10 @@ class Widget:
         if(self.text != None):
             self.text = text
             self.font_sys = pygame.font.Font(PATH_RECURSOS + r"\Auxiliar\JingleBalonsGTDemo.ttf", font_size)
-            self.font_color = font_color  
+            self.font_color = font_color
+        
+        self.slave_surface = pygame.Surface((self.w,self.h), pygame.SRCALPHA)
+        self.slave_rect = self.slave_surface.get_rect(x = self.x, y = self.y)
 
 
     def render(self):
@@ -40,12 +45,17 @@ class Widget:
             self.slave_surface.blit(self.image_background,(0,0))
         
         if self.text != None:
-            image_text = self.font_sys.render(self.text,True,self.font_color,self.color_background)
-            image_text_rect = image_text.get_rect(center = (self.slave_rect.width/2, self.slave_rect.height/2))     
-            self.slave_surface.blit(image_text, image_text_rect)
+            self.image_text = self.font_sys.render(self.text,True,self.font_color,self.color_background)
+            if self.center:
+                self.image_text_rect = self.image_text.get_rect(center = (self.slave_rect.width/2, self.slave_rect.height/2)) 
+            else:
+                self.image_text_rect = self.image_text.get_rect(x = 0, centery = self.slave_rect.height/2) 
+            self.slave_surface.blit(self.image_text, self.image_text_rect)
             
         if self.color_border:
             pygame.draw.rect(self.slave_surface, self.color_border, self.slave_surface.get_rect(), 2)
+
+
 
 
     def update(self, lista_eventos):

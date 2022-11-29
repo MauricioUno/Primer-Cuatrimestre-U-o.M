@@ -5,8 +5,8 @@ from class_A import *
 from aux_frames import *
 
 class Portal(ObjetoAnimado):
-    def __init__(self, pos_x, pos_y, screen):
-        self.stay = Auxiliar.getSurfaceFromSpriteSheet(PATH_RECURSOS + "/items/teleporter.png", 7, 9) [:60]
+    def __init__(self, pos_x, pos_y, screen, nivel):
+        self.stay = Auxiliar.getSurfaceFromSpriteSheet(PATH_RECURSOS + "/items/portal_{0}.png".format(nivel), 7, 9) [:60]
         super().__init__(self.stay, pos_x, pos_y, screen)
         self.rect_hitbox = pygame.Rect(self.rect.x + self.rect.w/4, self.rect.y + 30, self.rect.w/2, self.rect.h - 30)
         self.timer = 0

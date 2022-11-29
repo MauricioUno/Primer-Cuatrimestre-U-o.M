@@ -1,4 +1,5 @@
 import pygame
+from aux_constantes import *
 
 class Form():
     forms_dict = {}
@@ -21,8 +22,14 @@ class Form():
             self.image_background  = pygame.transform.scale(self.image_background, (self.w, self.h)).convert_alpha()
         else:
             self.image_background = None
+
+        self.lista_widget = []
         
     
+    def on_click_boton(self, parametro):
+        self.set_active(parametro)
+
+
     def set_active(self,name):
         for aux_form in self.forms_dict.values():
             aux_form.active = False
@@ -33,16 +40,24 @@ class Form():
         if(self.color_background != None):
             self.surface.fill(self.color_background)
 
-        if self.color_border != None:
-            pygame.draw.rect(self.surface, self.color_border, self.surface.get_rect(), 2)
-             
         if(self.image_background != None):
             self.surface.blit(self.image_background, (0,0))
 
+        if self.color_border != None:
+            pygame.draw.rect(self.surface, self.color_border, self.surface.get_rect(), 2)
+             
 
-    def draw(self, delta_ms):
+    def draw(self, delta_ms, lista_eventos):
         self.master_surface.blit(self.surface,self.slave_rect)
         self.render()
+        for aux_boton in self.lista_widget:
+            aux_boton.draw()
+            aux_boton.update(lista_eventos)
+            
+        
+        
+        
+        
         
 
 
